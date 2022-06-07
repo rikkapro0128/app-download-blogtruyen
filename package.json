@@ -1,0 +1,16 @@
+{
+  "name": "download-manga-by-blogtruyen",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "dependencies": {
+    "electron": "^19.0.3"
+  },
+  "devDependencies": {
+    "electron-reload": "^2.0.0-alpha.1"
+  }
+}

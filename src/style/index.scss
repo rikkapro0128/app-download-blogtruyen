@@ -1,0 +1,17 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+.wrap {
+  .interact {
+    .title {
+      font-size: 1rem;
+    }
+    input {
+      padding: 5px;
+    }
+  }
+}
