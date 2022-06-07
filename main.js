@@ -17,6 +17,7 @@ const createWindow = ({ width, height }) => {
   });
   win.removeMenu();
   win.loadURL(`file://${__dirname}/src/public/index.html`);
+  // win.webContents.openDevTools();
 };
 
 

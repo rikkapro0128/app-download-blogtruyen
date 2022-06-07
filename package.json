@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
-    "start": "electron main.js"
+    "dev": "electron main.js"
   },
   "dependencies": {
     "electron": "^19.0.3"
