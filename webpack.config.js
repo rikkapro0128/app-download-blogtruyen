@@ -1,11 +1,11 @@
 const path = require("path");
 
 module.exports = {
-  target: "node",
   entry: "/src/public/index.js",
   output: {
-    filename: "bundler.js",
+    filename: "bundler.min.js",
     path: path.resolve(__dirname, "src/public"),
   },
   mode: "development",
+  watch: true,
 };

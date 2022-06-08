@@ -6,11 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
   let countPercent = 0;
 
   console.log(window);
-
-  const idPercent = setInterval(() => {
-    countPercent += 5;
-    percent.style.width = countPercent + '%';
-    if (countPercent == 100) clearInterval(idPercent);
-  }, 500);
+  
+  window.electronAPI.handlePercent((event, value) => {
+    console.log(event);
+    const oldValue = countPercent;
+    const newValue = oldValue + value
+    percent.style.width = newValue + '%';
+  })
 
 })
