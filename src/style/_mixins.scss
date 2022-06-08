@@ -11,4 +11,10 @@
   color: rgba(var(--color-gray-700), 1);
   cursor: pointer;
   text-transform: capitalize;
+  transition: all 200ms linear;
+  &--primary {
+    &:hover {
+      color: rgba(var(--color-blue), 1);
+    }
+  }
 }
