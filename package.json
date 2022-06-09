@@ -6,7 +6,6 @@
   "scripts": {
     "sass": "node-sass --output-style compressed -wr src/style/index.scss src/public/index.min.css",
     "dev": "electron main.js",
-    "lint": "prettier --check .",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -34,7 +33,6 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "yarn lint",
       "yarn format",
       "git add ."
     ]
