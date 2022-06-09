@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "electron": "^19.0.3",
+    "notyf": "^3.10.0",
     "puppeteer": "^14.3.0"
   },
   "devDependencies": {
