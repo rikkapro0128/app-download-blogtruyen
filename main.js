@@ -1,33 +1,32 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
-const electronReload = require("electron-reload");
-const path = require("path");
+const { app, BrowserWindow } = require('electron');
+const electronReload = require('electron-reload');
+const path = require('path');
+
+const { listEvent } = require('./src/event/index.js');
 
 electronReload(__dirname, {});
 
-let percent = 0;
-
-const createWindow = ({ width, height }) => {
+const createWindow = async ({ width, height, title = 'new title' }) => {
   const win = new BrowserWindow({
+    title,
     width: width || 800,
     height: height || 600,
     icon: `${__dirname}/src/public/assets/images/blogtruyen-logo.jpg`,
-    title: "Tool Download Blogtruyen",
     webPreferences: {
-      preload: path.join(__dirname, "preload", "index.js"),
+      preload: path.join(__dirname, 'src', 'contract', 'index.js'),
     },
   });
   win.removeMenu();
-  win.loadURL(`file://${__dirname}/src/public/index.html`);
-  win.webContents.openDevTools();
+  await win.loadURL(`file://${__dirname}/src/public/index.html`);
+  win.webContents.openDevTools(); // for enviroment development
   return win;
 };
 
-ipcMain.emit("miru:percent", "done");
-
-app.whenReady().then(() => {
-  const win = createWindow({});
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+app.whenReady().then(async () => {
+  const win = await createWindow({ title: 'Tool Download Blogtruyen' });
+  listEvent();
 });

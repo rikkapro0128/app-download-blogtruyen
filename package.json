@@ -5,10 +5,14 @@
   "license": "MIT",
   "scripts": {
     "sass": "node-sass --output-style compressed -wr src/style/index.scss src/public/index.min.css",
-    "dev": "electron main.js"
+    "dev": "electron main.js",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
   },
   "dependencies": {
-    "electron": "^19.0.3"
+    "axios": "^0.27.2",
+    "electron": "^19.0.3",
+    "puppeteer": "^14.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
@@ -16,8 +20,23 @@
     "babel-loader": "^8.2.5",
     "crypto-browserify": "^3.12.0",
     "electron-reload": "^2.0.0-alpha.1",
+    "husky": "4.3.8",
+    "lint-staged": "^13.0.1",
     "node-sass": "^7.0.1",
+    "prettier": "2.6.2",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.9.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "yarn lint",
+      "yarn format",
+      "git add ."
+    ]
   }
 }

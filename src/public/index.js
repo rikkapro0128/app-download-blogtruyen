@@ -1,17 +1,18 @@
+import event, { miruSend } from './event/index.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+  const eleLink = document.getElementById('link--image');
+  const eleBtnDownload = document.getElementById('btn--download');
 
-  const percent = document.getElementById('percent');
-  
-  let countPercent = 0;
+  event();
 
-  console.log(window);
-  
-  window.electronAPI.handlePercent((event, value) => {
-    console.log(event);
-    const oldValue = countPercent;
-    const newValue = oldValue + value
-    percent.style.width = newValue + '%';
-  })
-
-})
+  eleBtnDownload.addEventListener('click', function () {
+    const url = eleLink.value;
+    const testParternUrl = /http[s]?:\/\/blogtruyen.vn/g.test(url);
+    if (url) {
+      if (testParternUrl) {
+        miruSend.linkToIPC(url);
+      }
+    }
+  });
+});

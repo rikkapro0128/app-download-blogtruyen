@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.min.css" />
+    <script type="module" src="bundler.min.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="index.min.css">
-  <script type="module" src="bundler.min.js"></script>
-</head>
-
-<body>
-  <div class="wrap">
-    <div class="interactive">
-      <h3 class="interactive__title">link donwload</h3>
-      <div class="form-control">
-        <input class="form-control__fill" type="text" placeholder="Link truyện...">
-        <button class="btn btn--primary form-control__btn">tải xuống</button>
+  <body>
+    <div class="wrap">
+      <div class="interactive">
+        <h3 class="interactive__title">link donwload</h3>
+        <div class="form-control">
+          <input id="link--image" class="form-control__fill" type="text" placeholder="Link truyện..." />
+          <button id="btn--download" class="btn btn--primary form-control__btn">tải xuống</button>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div id="percent" class="timeline"></div>
       </div>
     </div>
-    <div class="progress-bar">
-      <div id="percent" class="timeline"></div>
-    </div>
-  </div>
-</body>
-
+  </body>
 </html>
