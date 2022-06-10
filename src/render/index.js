@@ -1,34 +1,10 @@
 import event, { miruSend } from './event';
-// import toast from './toasts';
-import { Notyf } from 'notyf';
-
-const notyf = new Notyf({
-  duration: 1000,
-  position: {
-    x: 'right',
-    y: 'top',
-  },
-  types: [
-    {
-      type: 'warning',
-      background: 'orange',
-      icon: {
-        className: 'material-icons',
-        tagName: 'i',
-        text: 'warning',
-      },
-    },
-    {
-      type: 'error',
-      background: 'indianred',
-      duration: 5000,
-      dismissible: true,
-    },
-  ],
-});
+import toast from './toasts/web';
+// import toast from './toasts/win';
 
 document.addEventListener('DOMContentLoaded', function () {
   const eleLink = document.getElementById('link--image');
+  const eleClearInput = document.querySelector('.form--wrap__clear');
   const eleBtnDownload = document.getElementById('btn--download');
 
   event();
@@ -40,7 +16,34 @@ document.addEventListener('DOMContentLoaded', function () {
       if (testParternUrl) {
         miruSend.linkToIPC(url);
       }
-      notyf.error('Link is Invalid!');
+      toast.error('Link is Invalid!');
+    } else {
+      toast.error('Link not found!');
+    }
+  });
+
+  eleClearInput.addEventListener('click', function () {
+    eleLink.value = '';
+  });
+
+  eleLink.addEventListener('focusin', function () {
+    if (this.value && !eleClearInput.className.includes('active')) {
+      eleClearInput.classList.add('active');
+    }
+  });
+
+  eleLink.addEventListener('input', function () {
+    const val = this.value;
+    if (val && !eleClearInput.className.includes('active')) {
+      eleClearInput.classList.add('active');
+    } else if (!val) {
+      eleClearInput.classList.remove('active');
+    }
+  });
+
+  eleLink.addEventListener('focusout', function () {
+    if (eleClearInput.className.includes('active')) {
+      eleClearInput.classList.remove('active');
     }
   });
 });

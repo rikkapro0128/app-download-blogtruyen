@@ -6,11 +6,23 @@ const { listEvent } = require('./src/event/index.js');
 
 electronReload(__dirname, {});
 
-const createWindow = async ({ width, height, title = 'new title' }) => {
+const createWindow = async ({
+  width = 600,
+  height = 600,
+  title = 'new title',
+  center = true,
+  backgroundColor = 'rgb(237, 241, 245)',
+}) => {
   const win = new BrowserWindow({
     title,
-    width: width || 800,
-    height: height || 600,
+    center,
+    backgroundColor,
+    width: width,
+    height: height,
+    minWidth: width,
+    minHeight: height,
+    maxWidth: width,
+    maxHeight: height,
     icon: `${__dirname}/src/public/assets/images/blogtruyen-logo.jpg`,
     webPreferences: {
       preload: path.join(__dirname, 'src', 'contract', 'index.js'),

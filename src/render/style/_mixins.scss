@@ -1,8 +1,8 @@
 .btn {
   padding: 5px;
-  background: rgba(var(--color-background-100), 1);
+  background: $--color-background-100;
   border-radius: 6px;
-  box-shadow: 0 14px 30px rgba(var(--color-shadow-blue), 0.1), 0 4px 4px rgba(var(--color-shadow-blue), 0.04);
+  box-shadow: 0 14px 30px rgba($--color-shadow-blue, 0.1), 0 4px 4px rgba($--color-shadow-blue, 0.04);
   font-size: 1.3rem;
   font-weight: 600;
   letter-spacing: 0.03rem;
@@ -13,7 +13,7 @@
   transition: all 200ms linear;
   &--primary {
     &:hover {
-      color: rgba(var(--color-blue), 1);
+      color: $--color-blue;
     }
   }
 }
