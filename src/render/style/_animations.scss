@@ -1,0 +1,30 @@
+@keyframes mscale {
+  0% {
+    transform: scale(0);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeSideIn {
+  from {
+  }
+  to {
+    margin-left: 6px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeVeritical {
+  from {
+  }
+  to {
+    left: 8px;
+    top: -10px;
+    opacity: 1;
+  }
+}

@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "sass": "node-sass --output-style compressed -wr src/style/index.scss src/public/index.min.css",
-    "dev": "concurrently \"yarn webpack\" \"electron main.js\" ",
+    "dev": "electron main.js",
     "format": "prettier --write ."
   },
   "dependencies": {
