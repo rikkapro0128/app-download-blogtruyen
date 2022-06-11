@@ -1,16 +1,15 @@
 import event, { miruSend } from './event';
 import toast from './toasts/web';
-import { createTask } from './utils';
+import { createTask, addClassForAnimation } from './utils';
 // import toast from './toasts/win';
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   const eleLink = document.getElementById('link--image');
   const eleClearInput = document.querySelector('.form--wrap__clear');
   const eleTaskComplete = document.querySelector('.tasks--complete');
+  const eleTotalTaskComplete = document.querySelector('.total-task--complete');
+  const eleProgressBar = document.querySelector('.progress-bar');
   const eleBtnDownload = document.getElementById('btn--download');
-
-  event();
-  let totalTasks = 0;
 
   eleBtnDownload.addEventListener('click', function () {
     const url = eleLink.value;
@@ -24,22 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
       toast.error('Link not found!');
     }
   });
-
-  // const idRunningTask = setInterval(() => {
-
-  //   const checkIsFirst = eleTaskComplete.querySelector('.tasks--complete__wrap.first');
-  //   const nodeTask = createTask({ taskName: 'No name task', isFirst: checkIsFirst ? false : true });
-  //   if(checkIsFirst) {
-  //     nodeTask.classList.add('sideVertical');
-  //   }
-  //   nodeTask.classList.add('active');
-  //   eleTaskComplete.append(nodeTask);
-  //   totalTasks += 1;
-  //   if(totalTasks === 5) {
-  //     clearInterval(idRunningTask);
-  //   }
-
-  // }, 1000)
 
   eleClearInput.addEventListener('click', function () {
     eleLink.value = '';
@@ -65,4 +48,28 @@ document.addEventListener('DOMContentLoaded', function () {
       eleClearInput.classList.remove('active');
     }
   });
+
+  event();
+  let totalTasks = 0;
+
+  await addClassForAnimation({ className: 'active', element: eleProgressBar });
+
+  const idRunningTask = setInterval(async () => {
+    const checkIsFirst = eleTaskComplete.querySelector('.tasks--complete__wrap.first');
+    const nodeTask = createTask({ taskName: 'No name task', isFirst: checkIsFirst ? false : true });
+    if (checkIsFirst) {
+      await addClassForAnimation({ className: 'sideVertical', element: nodeTask });
+    } else {
+      await addClassForAnimation({ className: 'active', element: eleTaskComplete });
+    }
+    nodeTask.classList.add('active');
+    eleTaskComplete.append(nodeTask);
+    totalTasks += 1;
+    if (totalTasks === 5) {
+      clearInterval(idRunningTask);
+      setTimeout(async () => {
+        await addClassForAnimation({ className: 'active', element: eleTotalTaskComplete });
+      }, 1000);
+    }
+  }, 1000);
 });

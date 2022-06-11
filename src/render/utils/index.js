@@ -10,3 +10,12 @@ export function createTask({ taskName = 'No task name', isFirst }) {
   `;
   return nodeMain;
 }
+
+export function addClassForAnimation({ className, element, timeSet = 600 }) {
+  element.classList.add(className);
+  return new Promise((res) => {
+    setTimeout(() => {
+      res(true);
+    }, timeSet);
+  });
+}
