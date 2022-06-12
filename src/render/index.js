@@ -1,6 +1,6 @@
 import event, { miruSend } from './event';
 import toast from './toasts/web';
-import { addClassForAnimation, appendTaskByName, addAnimation, removeAnimation } from './utils';
+import { addClassForAnimation, appendTaskByName, addAnimation, removeAnimation, getComputedStyle } from './utils';
 // import toast from './toasts/win';
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   const eleWelcome = document.querySelector('.welcome');
   const eleTotalTaskComplete = document.querySelector('.total-task--complete');
   const eleProgressBar = document.querySelector('.progress-bar');
+  const eleWrap = document.querySelector('html');
   const eleBtnDownload = document.getElementById('btn--download');
 
   eleBtnDownload.addEventListener('click', async function () {
@@ -25,16 +26,21 @@ document.addEventListener('DOMContentLoaded', async function () {
         // toast.success('Processing download...!');
         await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
         await removeAnimation({ element: eleInteract });
+        await removeAnimation({ element: eleWelcome, justAnimation: true });
+        await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleProgressBar, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleTaskComplete, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
 
-        // const idRunningTask = setInterval(async () => {
-        //   await appendTaskByName({ elementAppend: eleTaskComplete, taskName: 'no task name' })
-        //   totalTasks += 1;
-        //   if (totalTasks === 5) {
-        //     clearInterval(idRunningTask);
-        //   }
-        // }, 1000);
+        const idRunningTask = setInterval(async () => {
+          const taskAppended = await appendTaskByName({ elementAppend: eleTaskComplete, taskName: 'no task name' });
+          const getWidthElementWrap = getComputedStyle(eleWrap, 'height').split('px')[0];
+          // const getWidthTask = getComputedStyle(taskAppended, 'height').split('px')[0];
+          eleWrap.scrollTop = getWidthElementWrap;
+          totalTasks += 1;
+          if (totalTasks === 10) {
+            clearInterval(idRunningTask);
+          }
+        }, 1000);
       } else {
         toast.error('Link is Invalid!');
       }

@@ -11,6 +11,11 @@ export function createElementTask({ taskName = 'No task name', isFirst }) {
   return nodeMain;
 }
 
+export function getComputedStyle(element, style = 'color') {
+  // get style by element
+  return window.getComputedStyle(element, null).getPropertyValue(style);
+}
+
 export async function appendTaskByName({ elementAppend, taskName }) {
   const checkIsFirst = elementAppend.querySelector('.tasks--complete__wrap.first'); // check is first task
   const createNodeTask = createElementTask({ taskName: taskName, isFirst: checkIsFirst ? false : true });
@@ -21,6 +26,7 @@ export async function appendTaskByName({ elementAppend, taskName }) {
   }
   createNodeTask.classList.add('active');
   elementAppend.append(createNodeTask);
+  return Promise.resolve(createNodeTask);
 }
 
 export function addClassForAnimation({ className, element, timeSet = 600 }) {
@@ -47,9 +53,13 @@ export function addAnimation({ element, animationName, timeSet = 600 }) {
   });
 }
 
-export function removeAnimation({ element, timeSet = 0 }) {
+export function removeAnimation({ element, timeSet = 0, justAnimation = false }) {
   return new Promise((res) => {
-    element.setAttribute('style', '');
+    if (justAnimation) {
+      element.setAttribute('style', 'display: block;');
+    } else {
+      element.setAttribute('style', '');
+    }
     setTimeout(() => {
       res(element);
     }, timeSet);
