@@ -1,6 +1,13 @@
 import event, { miruSend } from './event';
 import toast from './toasts/web';
-import { addClassForAnimation, appendTaskByName, addAnimation, removeAnimation, getComputedStyle } from './utils';
+import {
+  addClassForAnimation,
+  appendTaskByName,
+  addAnimation,
+  removeAnimation,
+  getComputedStyle,
+  addStyleSmooth,
+} from './utils';
 // import toast from './toasts/win';
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -11,7 +18,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   const eleExitMenuSetting = document.querySelector('.menu__select--item.exit');
   const eleNodeSetting = document.querySelector('.node--setting');
   const eleMenuSetting = document.querySelector('.menu__select');
-  const eleWelcome = document.querySelector('.welcome');
+  const eleWelcome = document.querySelector('.welcome--no-tasks');
+  const eleWelcomeTaskRunning = document.querySelector('.welcome--task-running');
   const eleTotalTaskComplete = document.querySelector('.total-task--complete');
   const eleProgressBar = document.querySelector('.progress-bar');
   const eleWrap = document.querySelector('html');
@@ -25,9 +33,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         miruSend.linkToIPC(url);
         // toast.success('Processing download...!');
         await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
+        await addAnimation({ element: eleWelcome, animationName: 'welcomeOut', timeSet: 400 });
         await removeAnimation({ element: eleInteract });
-        await removeAnimation({ element: eleWelcome, justAnimation: true });
-        await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+        await removeAnimation({ element: eleWelcome });
+        await addAnimation({ element: eleWelcomeTaskRunning, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+        // await addStyleSmooth({ element: eleWelcome, propStyle: { prop: 'transform', value: 'scale(0.5)' } });
+        // await addStyleSmooth({ element: eleWelcome, propStyle: { prop: 'transform', value: 'translateY(-50%)' } });
+        // await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleProgressBar, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleTaskComplete, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
 

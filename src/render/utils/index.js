@@ -53,6 +53,22 @@ export function addAnimation({ element, animationName, timeSet = 600 }) {
   });
 }
 
+export function addStyleSmooth({ element, propStyle, delay = 5, timeSet = 400 }) {
+  return new Promise((res) => {
+    element.setAttribute(
+      'style',
+      `
+        display: block;
+        transition: all ${timeSet - delay}ms ease-in-out;
+      `,
+    );
+    setTimeout(() => {
+      element.style[propStyle.prop] = propStyle.value;
+      res(element);
+    }, delay);
+  });
+}
+
 export function removeAnimation({ element, timeSet = 0, justAnimation = false }) {
   return new Promise((res) => {
     if (justAnimation) {

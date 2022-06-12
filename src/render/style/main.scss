@@ -18,6 +18,10 @@
   color: $--color-gray-900;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 input,
 button {
   border: none;
@@ -52,10 +56,36 @@ a {
   position: relative;
   .welcome {
     height: fit-content;
-    display: none;
+    &--task-running {
+      margin-top: 3.5rem;
+      width: 100%;
+      display: none;
+      &__wrap--img {
+        width: 16rem;
+        margin: 0 auto;
+        position: relative;
+        &::before {
+          position: absolute;
+          content: '';
+          width: 18rem;
+          height: 18rem;
+          top: -12%;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: $--color-gray-300;
+          border-radius: 50%;
+        }
+        img {
+          position: relative;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+    }
     &--no-tasks {
       margin-top: 8rem;
       width: 100%;
+      display: none;
       &__wrap--img {
         width: 20rem;
         margin: 0 auto;

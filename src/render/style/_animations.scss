@@ -68,3 +68,17 @@
     opacity: 0;
   }
 }
+
+@keyframes welcomeOut {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: translateY(-60%) scale(0.8);
+    opacity: 0;
+  }
+}
