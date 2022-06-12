@@ -10,11 +10,21 @@ export default new Notyf({
     {
       type: 'warning',
       background: 'orange',
-      icon: {
-        className: 'material-icons',
-        tagName: 'i',
-        text: 'warning',
-      },
+      // icon: {
+      //   className: 'material-icons',
+      //   tagName: 'i',
+      //   text: 'warning',
+      // },
+    },
+    {
+      type: 'success',
+      background: 'green',
+      duration: 5000,
+      // icon: {
+      //   className: 'material-icons',
+      //   tagName: 'i',
+      //   text: 'check_circle',
+      // },
     },
     {
       type: 'error',

@@ -4,12 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="styles.min.js"></script>
     <script defer src="render.min.js"></script>
-    <script defer src="styles.min.js"></script>
   </head>
 
   <body>
     <div class="wrap">
+      <!-- BLOCK INSERT LINK MANGA TO DOWNLOAD -->
       <div class="interactive">
         <h3 class="interactive__title">link donwload</h3>
         <div class="form-control">
@@ -18,6 +19,7 @@
               id="link--image"
               spellcheck="false"
               class="form--wrap__fill"
+              value="https://blogtruyen.vn/25477/kimi-wa-meido-sama"
               type="text"
               placeholder="Link manga..."
             />
@@ -26,12 +28,25 @@
           <button id="btn--download" class="btn btn--primary form-control__btn">download</button>
         </div>
       </div>
+      <!-- BLOCK WELCOME STATUS WHEN NO TASK -->
+      <div class="welcome">
+        <div class="welcome--no-tasks">
+          <div class="welcome--no-tasks__wrap--img">
+            <img src="assets/gifs/troll.gif" alt="troll you =))" />
+          </div>
+          <p>slogan.</p>
+          <span class="welcome--no-tasks__say">more down, more merrier</span>
+        </div>
+      </div>
+      <!-- BLOCK PROGRESS BAR FOR FOLLOW PROCESS DOWNLOAD -->
       <div class="progress-bar">
         <div id="percent" class="timeline"></div>
       </div>
+      <!-- BLOCK FOLLOW TASK IS DONE -->
       <div class="tasks--complete">
-        <h2 class="tasks--complete__title">task complete</h2>
+        <h2 class="tasks--complete__title">process task complete</h2>
       </div>
+      <!-- BLOCK SHOW STATUS TASKS -->
       <div class="total-task--complete">
         <h4 class="total-task--complete__title">total task complete</h4>
         <div class="wrap--result">
@@ -44,6 +59,25 @@
             <span class="wrap--result__failure--content">0 tasks failure</span>
           </p>
         </div>
+      </div>
+      <!-- BLOCK TOGGLE SELECT SETTING -->
+      <div class="node--setting">
+        <div class="node--setting__icon">
+          <div class="node--horizontal"></div>
+          <div class="node--horizontal"></div>
+          <div class="node--horizontal"></div>
+        </div>
+      </div>
+      <!-- BLOCK MENU SETTING -->
+      <div class="menu__select">
+        <p class="menu__select--item location">
+          <span class="material-symbols-outlined"> save </span>
+          <span>location</span>
+        </p>
+        <p class="menu__select--item exit">
+          <span class="material-symbols-outlined"> close </span>
+          <span>exit</span>
+        </p>
       </div>
     </div>
   </body>

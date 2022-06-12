@@ -1,27 +1,59 @@
 import event, { miruSend } from './event';
 import toast from './toasts/web';
-import { createTask, addClassForAnimation } from './utils';
+import { addClassForAnimation, appendTaskByName, addAnimation, removeAnimation } from './utils';
 // import toast from './toasts/win';
 
 document.addEventListener('DOMContentLoaded', async function () {
   const eleLink = document.getElementById('link--image');
+  const eleInteract = document.querySelector('.interactive');
   const eleClearInput = document.querySelector('.form--wrap__clear');
   const eleTaskComplete = document.querySelector('.tasks--complete');
+  const eleExitMenuSetting = document.querySelector('.menu__select--item.exit');
+  const eleNodeSetting = document.querySelector('.node--setting');
+  const eleMenuSetting = document.querySelector('.menu__select');
+  const eleWelcome = document.querySelector('.welcome');
   const eleTotalTaskComplete = document.querySelector('.total-task--complete');
   const eleProgressBar = document.querySelector('.progress-bar');
   const eleBtnDownload = document.getElementById('btn--download');
 
-  eleBtnDownload.addEventListener('click', function () {
+  eleBtnDownload.addEventListener('click', async function () {
     const url = eleLink.value;
     const testParternUrl = /http[s]?:\/\/blogtruyen.vn/g.test(url);
     if (url) {
       if (testParternUrl) {
         miruSend.linkToIPC(url);
+        // toast.success('Processing download...!');
+        await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
+        await removeAnimation({ element: eleInteract });
+        await addAnimation({ element: eleProgressBar, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+        await addAnimation({ element: eleTaskComplete, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+
+        // const idRunningTask = setInterval(async () => {
+        //   await appendTaskByName({ elementAppend: eleTaskComplete, taskName: 'no task name' })
+        //   totalTasks += 1;
+        //   if (totalTasks === 5) {
+        //     clearInterval(idRunningTask);
+        //   }
+        // }, 1000);
+      } else {
+        toast.error('Link is Invalid!');
       }
-      toast.error('Link is Invalid!');
     } else {
       toast.error('Link not found!');
     }
+  });
+
+  eleNodeSetting.addEventListener('click', async function () {
+    await addAnimation({ element: eleNodeSetting, animationName: 'hideDeep', timeSet: 200 });
+    await addAnimation({ element: eleMenuSetting, animationName: 'fadeInVeriticalToTop', timeSet: 200 });
+  });
+
+  eleExitMenuSetting.addEventListener('click', async function (event) {
+    event.stopPropagation();
+    await addAnimation({ element: eleMenuSetting, animationName: 'fadeOutVeriticalToTop', timeSet: 200 }).then(
+      (element) => (element.style.display = 'none'),
+    );
+    await addAnimation({ element: eleNodeSetting, animationName: 'outstanding', timeSet: 200 });
   });
 
   eleClearInput.addEventListener('click', function () {
@@ -52,24 +84,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   event();
   let totalTasks = 0;
 
-  await addClassForAnimation({ className: 'active', element: eleProgressBar });
-
-  const idRunningTask = setInterval(async () => {
-    const checkIsFirst = eleTaskComplete.querySelector('.tasks--complete__wrap.first');
-    const nodeTask = createTask({ taskName: 'No name task', isFirst: checkIsFirst ? false : true });
-    if (checkIsFirst) {
-      await addClassForAnimation({ className: 'sideVertical', element: nodeTask });
-    } else {
-      await addClassForAnimation({ className: 'active', element: eleTaskComplete });
-    }
-    nodeTask.classList.add('active');
-    eleTaskComplete.append(nodeTask);
-    totalTasks += 1;
-    if (totalTasks === 5) {
-      clearInterval(idRunningTask);
-      setTimeout(async () => {
-        await addClassForAnimation({ className: 'active', element: eleTotalTaskComplete });
-      }, 1000);
-    }
-  }, 1000);
+  await addAnimation({ element: eleInteract, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+  await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
 });
