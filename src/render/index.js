@@ -28,8 +28,13 @@ document.addEventListener('DOMContentLoaded', async function () {
   const eleControlStop = document.querySelector('.control--download__stop');
   const elePopupSetting = document.querySelector('.popup--setting');
   const eleSaveLocation = document.querySelector('.save--location');
+  const eleChoosePathSave = document.querySelector('.save--location__area--click');
   const eleSaveLocationClose = document.querySelector('.save--location__close > span');
   const eleBtnDownload = document.getElementById('btn--download');
+
+  eleChoosePathSave.addEventListener('click', function () {
+    window.electronAPI.popupChooseFloder();
+  });
 
   eleLocationMenuSetting.addEventListener('click', async function () {
     await addAnimation({ element: elePopupSetting, animationName: 'fadeIn', timeSet: 400 });

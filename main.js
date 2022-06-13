@@ -40,5 +40,5 @@ app.on('window-all-closed', () => {
 
 app.whenReady().then(async () => {
   const win = await createWindow({ title: 'Tool Download Blogtruyen' });
-  listEvent();
+  listEvent(win);
 });

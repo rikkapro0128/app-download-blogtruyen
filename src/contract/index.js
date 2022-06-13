@@ -8,4 +8,5 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electronAPI', {
   handlePercent: (callback) => ipcRenderer.on('update-percent', callback),
   sendLinkManga: (url) => ipcRenderer.send('miru:link', url),
+  popupChooseFloder: (options) => ipcRenderer.send('miru:choose-path-save', options),
 });
