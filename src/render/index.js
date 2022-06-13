@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   const eleClearInput = document.querySelector('.form--wrap__clear');
   const eleTaskComplete = document.querySelector('.tasks--complete');
   const eleExitMenuSetting = document.querySelector('.menu__select--item.exit');
+  const eleLocationMenuSetting = document.querySelector('.menu__select--item.location');
   const eleNodeSetting = document.querySelector('.node--setting');
   const eleMenuSetting = document.querySelector('.menu__select');
   const eleWelcome = document.querySelector('.welcome--no-tasks');
@@ -23,7 +24,39 @@ document.addEventListener('DOMContentLoaded', async function () {
   const eleTotalTaskComplete = document.querySelector('.total-task--complete');
   const eleProgressBar = document.querySelector('.progress-bar');
   const eleWrap = document.querySelector('html');
+  const eleControlPause = document.querySelector('.control--download__pause');
+  const eleControlStop = document.querySelector('.control--download__stop');
+  const elePopupSetting = document.querySelector('.popup--setting');
+  const eleSaveLocation = document.querySelector('.save--location');
+  const eleSaveLocationClose = document.querySelector('.save--location__close > span');
   const eleBtnDownload = document.getElementById('btn--download');
+
+  eleLocationMenuSetting.addEventListener('click', async function () {
+    await addAnimation({ element: elePopupSetting, animationName: 'fadeIn', timeSet: 400 });
+  });
+
+  eleSaveLocationClose.addEventListener('click', async function (event) {
+    await addAnimation({ element: elePopupSetting, animationName: 'fadeOut', timeSet: 400 });
+    await removeAnimation({ element: elePopupSetting });
+  });
+
+  eleSaveLocation.addEventListener('click', function (event) {
+    event.stopPropagation();
+  });
+
+  elePopupSetting.addEventListener('click', async function (event) {
+    event.stopPropagation();
+    await addAnimation({ element: this, animationName: 'fadeOut', timeSet: 400 });
+    await removeAnimation({ element: this });
+  });
+
+  eleControlPause.addEventListener('click', function () {
+    if (eleControlPause.className.includes('active')) {
+      eleControlPause.classList.remove('active');
+    } else {
+      eleControlPause.classList.add('active');
+    }
+  });
 
   eleBtnDownload.addEventListener('click', async function () {
     const url = eleLink.value;
@@ -37,22 +70,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         await removeAnimation({ element: eleInteract });
         await removeAnimation({ element: eleWelcome });
         await addAnimation({ element: eleWelcomeTaskRunning, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+        await addAnimation({ element: eleControlPause, animationName: 'sideRightToLeft', timeSet: 400 });
+        await addAnimation({ element: eleControlStop, animationName: 'sideRightToLeft', timeSet: 400 });
         // await addStyleSmooth({ element: eleWelcome, propStyle: { prop: 'transform', value: 'scale(0.5)' } });
         // await addStyleSmooth({ element: eleWelcome, propStyle: { prop: 'transform', value: 'translateY(-50%)' } });
         // await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleProgressBar, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleTaskComplete, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
 
-        const idRunningTask = setInterval(async () => {
-          const taskAppended = await appendTaskByName({ elementAppend: eleTaskComplete, taskName: 'no task name' });
-          const getWidthElementWrap = getComputedStyle(eleWrap, 'height').split('px')[0];
-          // const getWidthTask = getComputedStyle(taskAppended, 'height').split('px')[0];
-          eleWrap.scrollTop = getWidthElementWrap;
-          totalTasks += 1;
-          if (totalTasks === 10) {
-            clearInterval(idRunningTask);
-          }
-        }, 1000);
+        // const idRunningTask = setInterval(async () => {
+        //   const taskAppended = await appendTaskByName({ elementAppend: eleTaskComplete, taskName: 'no task name' });
+        //   const getWidthElementWrap = getComputedStyle(eleWrap, 'height').split('px')[0];
+        //   // const getWidthTask = getComputedStyle(taskAppended, 'height').split('px')[0];
+        //   eleWrap.scrollTop = getWidthElementWrap;
+        //   totalTasks += 1;
+        //   if (totalTasks === 10) {
+        //     clearInterval(idRunningTask);
+        //   }
+        // }, 1000);
       } else {
         toast.error('Link is Invalid!');
       }

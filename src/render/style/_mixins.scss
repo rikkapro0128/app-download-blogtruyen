@@ -16,4 +16,12 @@
       color: $--color-blue;
     }
   }
+  &--orange {
+    background: $--color-peach;
+    color: $--color-white;
+    transition: opacity 200ms linear;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
 }
