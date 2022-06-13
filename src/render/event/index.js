@@ -1,16 +1,15 @@
 import miruSend from './sends.js'; // class list send to IPC (main process)
 
+const eleFillPathSave = document.querySelector('.save--location__path--present > span.content');
+
 export default function () {
   // function register event send by main process
 
-  const elePercent = document.getElementById('percent'); // element view percent progress bar
-
-  let countPercent = 0;
-
-  window.electronAPI.handlePercent((event, value) => {
-    const oldValue = countPercent;
-    const newValue = oldValue + value;
-    elePercent.style.width = newValue + '%';
+  window.electronAPI.savePathStorage((event, value) => {
+    if (value.pathStorage !== localStorage.getItem('pathStorage')) {
+      localStorage.setItem('pathStorageNew', value.pathStorage);
+      eleFillPathSave.innerHTML = value.pathStorage;
+    }
   });
 }
 

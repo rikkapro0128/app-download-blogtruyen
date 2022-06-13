@@ -28,16 +28,38 @@ document.addEventListener('DOMContentLoaded', async function () {
   const eleControlStop = document.querySelector('.control--download__stop');
   const elePopupSetting = document.querySelector('.popup--setting');
   const eleSaveLocation = document.querySelector('.save--location');
-  const eleChoosePathSave = document.querySelector('.save--location__area--click');
-  const eleSaveLocationClose = document.querySelector('.save--location__close > span');
+  const eleChoosePathSave = eleSaveLocation.querySelector('.save--location__area--click');
+  const eleSaveLocationClose = eleSaveLocation.querySelector('.save--location__close > span');
+  const eleFillPathSave = eleSaveLocation.querySelector('.save--location__path--present > span.content');
+  const eleBtnSavePath = eleSaveLocation.querySelector('.save--location__save.btn');
   const eleBtnDownload = document.getElementById('btn--download');
+
+  eleBtnSavePath.addEventListener('click', async function () {
+    const pathIsNew = localStorage.getItem('pathStorageNew');
+    if (pathIsNew) {
+      localStorage.setItem('pathStorage', pathIsNew);
+      localStorage.removeItem('pathStorageNew');
+      toast.success('Path is saved!');
+    } else {
+      toast.open({ type: 'warning', message: 'Not change!' });
+    }
+    await addAnimation({ element: elePopupSetting, animationName: 'fadeOut', timeSet: 400 });
+    await removeAnimation({ element: elePopupSetting });
+  });
 
   eleChoosePathSave.addEventListener('click', function () {
     window.electronAPI.popupChooseFloder();
   });
 
   eleLocationMenuSetting.addEventListener('click', async function () {
+    const checkPath = localStorage.getItem('pathStorage');
+    if (checkPath) {
+      eleFillPathSave.innerHTML = checkPath;
+    } else {
+      eleFillPathSave.innerHTML = 'not selected yet!';
+    }
     await addAnimation({ element: elePopupSetting, animationName: 'fadeIn', timeSet: 400 });
+    // load done for animation
   });
 
   eleSaveLocationClose.addEventListener('click', async function (event) {
@@ -140,7 +162,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   });
 
   event();
-  let totalTasks = 0;
 
   await addAnimation({ element: eleInteract, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
   await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });

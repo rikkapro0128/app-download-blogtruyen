@@ -1,4 +1,4 @@
-const { dialog, BrowserWindow } = require('electron');
+const { dialog, BrowserWindow, ipcMain } = require('electron');
 
 class handleEvent {
   /*
@@ -11,28 +11,18 @@ class handleEvent {
   }
 
   async choosePathSave({ event, arg, mainWindow }) {
-    console.log(arg);
     let options = {
-      // See place holder 1 in above image
-      title: 'Custom title bar',
-
-      // See place holder 2 in above image
+      title: 'select floder',
       defaultPath: 'D:\\electron-app',
-
-      // See place holder 3 in above image
-      buttonLabel: 'Custom button',
-
-      // See place holder 4 in above image
-      filters: [
-        { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
-        { name: 'Movies', extensions: ['mkv', 'avi', 'mp4'] },
-        { name: 'Custom File Type', extensions: ['as'] },
-        { name: 'All Files', extensions: ['*'] },
-      ],
-      properties: ['openFile', 'multiSelections'],
+      buttonLabel: 'Choose this floder',
+      properties: ['openDirectory'],
     };
-    let filePaths = await dialog.showOpenDialog(mainWindow, options);
-    console.log(filePaths);
+    let dialogInit = await dialog.showOpenDialog(mainWindow, options);
+    if (!dialogInit.canceled && dialogInit.filePaths) {
+      mainWindow.webContents.send('miru:save--path-storage', {
+        pathStorage: dialogInit.filePaths[0],
+      });
+    }
   }
 }
 

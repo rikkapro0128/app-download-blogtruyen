@@ -85,7 +85,11 @@ a {
       &__says {
         padding-top: 1rem;
         font-size: 2rem;
-        text-align: center;
+        text-align: left;
+      }
+      &__path--present {
+        text-align: left;
+        font-size: 1.8rem;
       }
       &__area--click {
         margin: 1rem 0;

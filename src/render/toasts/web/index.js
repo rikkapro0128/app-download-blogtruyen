@@ -9,26 +9,24 @@ export default new Notyf({
   types: [
     {
       type: 'warning',
-      background: 'orange',
-      // icon: {
-      //   className: 'material-icons',
-      //   tagName: 'i',
-      //   text: 'warning',
-      // },
+      background: 'rgb(247, 154, 99)',
+      duration: 5000,
+      icon: {
+        className: 'material-symbols-outlined',
+        tagName: 'span',
+        text: 'warning',
+      },
+      dismissible: true,
     },
     {
       type: 'success',
-      background: 'green',
+      background: 'rgb(123, 213, 85)',
       duration: 5000,
-      // icon: {
-      //   className: 'material-icons',
-      //   tagName: 'i',
-      //   text: 'check_circle',
-      // },
+      dismissible: true,
     },
     {
       type: 'error',
-      background: 'indianred',
+      background: 'rgb(232, 93, 117)',
       duration: 5000,
       dismissible: true,
     },

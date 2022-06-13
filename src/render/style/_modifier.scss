@@ -3,6 +3,12 @@
   color: $--color-white;
 }
 
+.notyf__icon {
+  span {
+    color: $--color-white !important;
+  }
+}
+
 .notyf__toast {
   border-radius: 6px;
   box-shadow: 0 14px 30px rgba(var(--color-shadow-dark), 0.1), 0 4px 4px rgba(var(--color-shadow-dark), 0.04);
