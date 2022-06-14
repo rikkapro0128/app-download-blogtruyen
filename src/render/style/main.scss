@@ -63,7 +63,25 @@ a {
     background-color: $--color-background;
     z-index: 999;
     display: none;
-    .save--location {
+    &__close {
+      display: flex;
+      justify-content: flex-end;
+      span {
+        cursor: pointer;
+        display: block;
+        font-size: 3rem;
+      }
+    }
+    &__title {
+      padding-top: 1rem;
+      font-size: 2rem;
+      text-align: left;
+    }
+    &__save {
+      width: 100%;
+      box-shadow: 0 14px 30px rgba($--color-peach, 0.1), 0 4px 4px rgba($--color-peach, 0.04);
+    }
+    .wrap--popup {
       width: 30rem;
       border-radius: 6px;
       background-color: $--color-white;
@@ -73,20 +91,9 @@ a {
       transform: translate(-50%, -50%);
       padding: 2rem;
       box-shadow: 0 14px 30px rgba($--color-shadow-blue, 0.1), 0 4px 4px rgba($--color-shadow-blue, 0.04);
-      &__close {
-        display: flex;
-        justify-content: flex-end;
-        span {
-          cursor: pointer;
-          display: block;
-          font-size: 3rem;
-        }
-      }
-      &__says {
-        padding-top: 1rem;
-        font-size: 2rem;
-        text-align: left;
-      }
+      display: none;
+    }
+    .save--location {
       &__path--present {
         text-align: left;
         font-size: 1.8rem;
@@ -103,10 +110,8 @@ a {
           text-align: center;
         }
       }
-      &__save {
-        width: 100%;
-        box-shadow: 0 14px 30px rgba($--color-peach, 0.1), 0 4px 4px rgba($--color-peach, 0.04);
-      }
+    }
+    .save--options {
     }
   }
   .control--download {

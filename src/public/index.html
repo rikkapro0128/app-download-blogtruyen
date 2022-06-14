@@ -80,6 +80,10 @@
           <span class="material-symbols-outlined"> save </span>
           <span>location</span>
         </p>
+        <p class="menu__select--item options">
+          <span class="material-symbols-outlined"> settings_suggest </span>
+          <span>options</span>
+        </p>
         <p class="menu__select--item exit">
           <span class="material-symbols-outlined"> close </span>
           <span>exit</span>
@@ -111,20 +115,35 @@
       <!-- BLOCK MENU SETTING -->
       <div class="popup--setting">
         <!-- BLOCK MENU SETTING SAVE STORAGE -->
-        <div class="save--location">
-          <div class="save--location__close">
+        <div class="save--location wrap--popup">
+          <div class="save--location__close popup--setting__close">
             <span class="material-symbols-outlined"> close </span>
           </div>
-          <div class="save--location__says">Please choose path to save!</div>
+          <div class="save--location__says popup--setting__title">Please choose path to save!</div>
+          <!--CONTENT POPUP WILL BE TRANS FORM DYNAMIC HERE -->
+          <!-- START -->
           <div class="save--location__path--present">
             <span class="title">Path present</span>
             <span class="content"></span>
           </div>
+          <!-- END -->
           <div class="save--location__area--click">
             <span class="material-symbols-outlined"> download </span>
             <!-- <p>path</p> -->
           </div>
-          <button class="save--location__save btn btn--orange">save path</button>
+          <button class="save--location__save popup--setting__save btn btn--orange">save path</button>
+        </div>
+        <!-- BLOCK MENU SETTING SAVE OPTIONS TO CLONE -->
+        <div class="save--options wrap--popup">
+          <div class="save--options__close popup--setting__close">
+            <span class="material-symbols-outlined"> close </span>
+          </div>
+          <div class="save--options__says popup--setting__title">Please choose your options to save!</div>
+          <!-- CONTENT POPUP WILL BE TRANSFORM DYNAMIC HERE -->
+          <!-- START -->
+
+          <!-- END -->
+          <button class="save--options__save popup--setting__save btn btn--orange">save options</button>
         </div>
       </div>
     </div>

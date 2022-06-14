@@ -30,7 +30,7 @@ const createWindow = async ({
   });
   win.removeMenu();
   await win.loadURL(`file://${__dirname}/src/public/index.html`);
-  // win.webContents.openDevTools(); // for enviroment development
+  win.webContents.openDevTools(); // for enviroment development
   return win;
 };
 

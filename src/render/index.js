@@ -1,37 +1,41 @@
 import event, { miruSend } from './event';
 import toast from './toasts/web';
-import {
-  addClassForAnimation,
-  appendTaskByName,
-  addAnimation,
-  removeAnimation,
-  getComputedStyle,
-  addStyleSmooth,
-} from './utils';
+import { addAnimation, removeAnimation, addStyleSmooth } from './utils';
 // import toast from './toasts/win';
 
 document.addEventListener('DOMContentLoaded', async function () {
+  // AREA ELEMENT INTERACT BODY CONTENT
   const eleLink = document.getElementById('link--image');
   const eleInteract = document.querySelector('.interactive');
   const eleClearInput = document.querySelector('.form--wrap__clear');
   const eleTaskComplete = document.querySelector('.tasks--complete');
   const eleExitMenuSetting = document.querySelector('.menu__select--item.exit');
-  const eleLocationMenuSetting = document.querySelector('.menu__select--item.location');
+
+  // AREA ELEMENT CONTROL POPUP
+  const listSelectMenu = document.querySelectorAll('.menu__select > .menu__select--item:not(.exit)');
+  const listPopupBtnClose = document.querySelectorAll('.popup--setting__close > span');
+  const elePopupSetting = document.querySelector('.popup--setting');
+
+  // AREA ELEMENT CONTROL DOWNLOAD
   const eleNodeSetting = document.querySelector('.node--setting');
   const eleMenuSetting = document.querySelector('.menu__select');
   const eleWelcome = document.querySelector('.welcome--no-tasks');
   const eleWelcomeTaskRunning = document.querySelector('.welcome--task-running');
   const eleTotalTaskComplete = document.querySelector('.total-task--complete');
   const eleProgressBar = document.querySelector('.progress-bar');
+
+  // ELEMENT WRAP CONTENT
   const eleWrap = document.querySelector('html');
+
+  // AREA MANAGER POPUP ELEMENT
+  const elePopupLocation = document.querySelector('.save--location');
+  const elePopupOptions = document.querySelector('.save--options');
+  const eleBtnSavePath = elePopupLocation.querySelector('.save--location__save');
+  const eleChoosePathSave = elePopupLocation.querySelector('.save--location__area--click');
+
+  // AREA ELEMENT CONTROL DOWNLOAD
   const eleControlPause = document.querySelector('.control--download__pause');
   const eleControlStop = document.querySelector('.control--download__stop');
-  const elePopupSetting = document.querySelector('.popup--setting');
-  const eleSaveLocation = document.querySelector('.save--location');
-  const eleChoosePathSave = eleSaveLocation.querySelector('.save--location__area--click');
-  const eleSaveLocationClose = eleSaveLocation.querySelector('.save--location__close > span');
-  const eleFillPathSave = eleSaveLocation.querySelector('.save--location__path--present > span.content');
-  const eleBtnSavePath = eleSaveLocation.querySelector('.save--location__save.btn');
   const eleBtnDownload = document.getElementById('btn--download');
 
   eleBtnSavePath.addEventListener('click', async function () {
@@ -51,30 +55,51 @@ document.addEventListener('DOMContentLoaded', async function () {
     window.electronAPI.popupChooseFloder();
   });
 
-  eleLocationMenuSetting.addEventListener('click', async function () {
-    const checkPath = localStorage.getItem('pathStorage');
-    if (checkPath) {
-      eleFillPathSave.innerHTML = checkPath;
-    } else {
-      eleFillPathSave.innerHTML = 'not selected yet!';
-    }
-    await addAnimation({ element: elePopupSetting, animationName: 'fadeIn', timeSet: 400 });
-    // load done for animation
+  listSelectMenu.forEach((element) => {
+    element.addEventListener('click', async function (event) {
+      const popupName = this.className.split(' ')[1];
+      let popupElement = document.querySelector(`.popup--setting > .save--${popupName}`);
+      elePopupSetting.classList.add(popupName);
+      if (popupName === 'location') {
+        const checkPath = localStorage.getItem('pathStorage');
+        const eleFillPathSave = popupElement.querySelector('.save--location__path--present .content');
+        if (checkPath) {
+          eleFillPathSave.innerHTML = checkPath;
+        } else {
+          eleFillPathSave.innerHTML = 'not selected yet!';
+        }
+      }
+      // load for animation
+      popupElement.style.display = 'block';
+      await addAnimation({ element: elePopupSetting, animationName: 'fadeIn', timeSet: 400 });
+    });
   });
 
-  eleSaveLocationClose.addEventListener('click', async function (event) {
-    await addAnimation({ element: elePopupSetting, animationName: 'fadeOut', timeSet: 400 });
-    await removeAnimation({ element: elePopupSetting });
-  });
+  listPopupBtnClose.forEach((element) => {
+    const popupElement = element.closest('.wrap--popup');
 
-  eleSaveLocation.addEventListener('click', function (event) {
-    event.stopPropagation();
+    popupElement.addEventListener('click', function (event) {
+      event.stopPropagation();
+    });
+
+    element.addEventListener('click', async function () {
+      elePopupSetting.classList.remove(elePopupSetting.className.split(' ')[1]);
+      // load for animation
+      await addAnimation({ element: elePopupSetting, animationName: 'fadeOut', timeSet: 400 });
+      await removeAnimation({ element: elePopupSetting });
+      popupElement.style.display = 'none';
+    });
   });
 
   elePopupSetting.addEventListener('click', async function (event) {
-    event.stopPropagation();
-    await addAnimation({ element: this, animationName: 'fadeOut', timeSet: 400 });
-    await removeAnimation({ element: this });
+    const popupName = this.className.split(' ')[1];
+    if (popupName) {
+      const popupElement = elePopupSetting.querySelector(`.save--${popupName}`);
+      this.classList.remove(popupName);
+      await addAnimation({ element: this, animationName: 'fadeOut', timeSet: 400 });
+      await removeAnimation({ element: this });
+      popupElement.style.display = 'none';
+    }
   });
 
   eleControlPause.addEventListener('click', function () {
@@ -90,7 +115,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const testParternUrl = /http[s]?:\/\/blogtruyen.vn/g.test(url);
     if (url) {
       if (testParternUrl) {
-        // toast.success('Processing download...!');
         await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleWelcome, animationName: 'welcomeOut', timeSet: 400 });
         await removeAnimation({ element: eleInteract });
@@ -98,23 +122,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         await addAnimation({ element: eleWelcomeTaskRunning, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleControlPause, animationName: 'sideRightToLeft', timeSet: 400 });
         await addAnimation({ element: eleControlStop, animationName: 'sideRightToLeft', timeSet: 400 });
-        // await addStyleSmooth({ element: eleWelcome, propStyle: { prop: 'transform', value: 'scale(0.5)' } });
-        // await addStyleSmooth({ element: eleWelcome, propStyle: { prop: 'transform', value: 'translateY(-50%)' } });
-        // await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleProgressBar, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleTaskComplete, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
-
-        // const idRunningTask = setInterval(async () => {
-        //   const taskAppended = await appendTaskByName({ elementAppend: eleTaskComplete, taskName: 'no task name' });
-        //   const getWidthElementWrap = getComputedStyle(eleWrap, 'height').split('px')[0];
-        //   // const getWidthTask = getComputedStyle(taskAppended, 'height').split('px')[0];
-        //   eleWrap.scrollTop = getWidthElementWrap;
-        //   totalTasks += 1;
-        //   if (totalTasks === 10) {
-        //     clearInterval(idRunningTask);
-        //   }
-        // }, 1000);
-
         // Wait for animation ended!
         miruSend.linkToIPC(url);
       } else {

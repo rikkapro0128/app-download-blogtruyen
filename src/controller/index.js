@@ -14,7 +14,7 @@ class handleEvent {
     ipcMain.emit('miru:start-clone', { linkManga: url });
   }
 
-  async startClone({ linkManga }) {
+  async startClone({ linkManga, mainWindow }) {
     // receive url to exec download manga
     const mangaTarget = linkManga;
     const cloneChapterStart = undefined || undefined; // undefined or typeof number
@@ -26,34 +26,48 @@ class handleEvent {
       // headless: false,
       args: ['--disable-software-rasterizer', '--disable-gpu'],
     });
+    mainWindow.webContents.send('miru:update-task', { name: 'Init puppeteer process' });
 
     // wait for page load content done!
     const page = await browser.newPage();
     await page.goto(mangaTarget);
     await page.waitForSelector('.manga-detail');
+    mainWindow.webContents.send('miru:update-task', { name: 'Puppeteer process loaded page' });
 
     // query get content from DOM
 
     const nameManga = await miruQuery.prop({ page, query: '.entry-title > a', property: 'textContent' });
-    const thumbNail = await miruQuery.attr({ page, query: '.thumbnail > img', attribute: 'src' });
-    const elementDesc = await miruQuery.prop({ page, query: '.detail > .content', property: 'textContent' });
-    const elementNameOther = await miruQuery.prop({
+    mainWindow.webContents.send('miru:update-task', { name: 'Get name manga', type: 'nameManga' });
+
+    const thumbNailManga = await miruQuery.attr({ page, query: '.thumbnail > img', attribute: 'src' });
+    mainWindow.webContents.send('miru:update-task', { name: 'Get thumbnail manga', type: 'thumbNailManga' });
+
+    const descManga = await miruQuery.prop({ page, query: '.detail > .content', property: 'textContent' });
+    mainWindow.webContents.send('miru:update-task', { name: 'Get thumbnail manga', type: 'descManga' });
+
+    const nameOther = await miruQuery.prop({
       page,
       query: '.description span.color-red',
       property: 'textContent',
     });
-    const elementNameAuthor = await miruQuery.prop({
+    mainWindow.webContents.send('miru:update-task', { name: 'Get name other manga', type: 'nameOther' });
+
+    const nameAuthor = await miruQuery.prop({
       page,
       query: '.description a.label.label-info',
       property: 'textContent',
     });
-    const elementTeamTranslate = await miruQuery.prop({
+    mainWindow.webContents.send('miru:update-task', { name: 'Get name author manga', type: 'nameAuthor' });
+
+    const teamTranslate = await miruQuery.prop({
       page,
       query: '.description span.translater a',
       property: 'textContent',
     });
+    mainWindow.webContents.send('miru:update-task', { name: 'Get name team translate manga', type: 'teamTranslate' });
+
     // get category of manga
-    const elementCategory = await miruQuery.mix({
+    const categorys = await miruQuery.mix({
       page,
       method: '$$eval',
       query: '.description p span.category a',
@@ -61,6 +75,8 @@ class handleEvent {
         return element.map((category) => category?.textContent);
       },
     });
+    mainWindow.webContents.send('miru:update-task', { name: 'Get categorys of manga', type: 'categorys' });
+
     // get user post manga of manga on blogtruyen
     const userPost = await miruQuery.mix({
       page,
@@ -72,6 +88,7 @@ class handleEvent {
         };
       },
     });
+    mainWindow.webContents.send('miru:update-task', { name: 'Get user post this manga', type: 'userPost' });
     // get user post last entry update manga of manga on blogtruyen
     const lastEntryUpdate = await miruQuery.mix({
       page,
@@ -83,6 +100,10 @@ class handleEvent {
           hour: dateTemp[1],
         };
       },
+    });
+    mainWindow.webContents.send('miru:update-task', {
+      name: 'Get last entry update this manga',
+      type: 'lastEntryUpdate',
     });
     // get all element chapter of manga on blogtruyen
     const chapters = await miruQuery.mix({
@@ -106,19 +127,20 @@ class handleEvent {
       },
       args: [cloneChapterStart, cloneChapterEnd],
     });
+    mainWindow.webContents.send('miru:update-task', { name: 'Get all chapter manga', type: 'chapters' });
 
-    console.log({
-      nameManga: nameManga,
-      thumbNail: thumbNail,
-      elementDesc: elementDesc,
-      elementNameOther: elementNameOther,
-      elementNameAuthor: elementNameAuthor,
-      elementTeamTranslate: elementTeamTranslate,
-      elementCategory,
-      userPost,
-      lastEntryUpdate,
-      chapters,
-    });
+    // console.log({
+    //   nameManga: nameManga,
+    //   thumbNail: thumbNail,
+    //   elementDesc: elementDesc,
+    //   elementNameOther: elementNameOther,
+    //   elementNameAuthor: elementNameAuthor,
+    //   elementTeamTranslate: elementTeamTranslate,
+    //   elementCategory,
+    //   userPost,
+    //   lastEntryUpdate,
+    //   chapters,
+    // });
   }
 
   async choosePathSave({ event, arg, mainWindow }) {
