@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const testParternUrl = /http[s]?:\/\/blogtruyen.vn/g.test(url);
     if (url) {
       if (testParternUrl) {
-        miruSend.linkToIPC(url);
         // toast.success('Processing download...!');
         await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
         await addAnimation({ element: eleWelcome, animationName: 'welcomeOut', timeSet: 400 });
@@ -115,6 +114,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         //     clearInterval(idRunningTask);
         //   }
         // }, 1000);
+
+        // Wait for animation ended!
+        miruSend.linkToIPC(url);
       } else {
         toast.error('Link is Invalid!');
       }

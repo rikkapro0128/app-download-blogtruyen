@@ -7,6 +7,6 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   savePathStorage: (callback) => ipcRenderer.on('miru:save--path-storage', callback),
-  sendLinkManga: (url) => ipcRenderer.send('miru:link', url),
+  sendLinkManga: (url) => ipcRenderer.send('miru:link', { url }),
   popupChooseFloder: (options) => ipcRenderer.send('miru:choose-path-save', options),
 });

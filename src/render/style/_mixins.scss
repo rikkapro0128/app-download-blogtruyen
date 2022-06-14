@@ -20,8 +20,8 @@
     background: $--color-peach;
     color: $--color-white;
     transition: opacity 200ms linear;
-    &:hover {
-      opacity: 0.9;
-    }
+  }
+  &:hover {
+    opacity: 0.9;
   }
 }
