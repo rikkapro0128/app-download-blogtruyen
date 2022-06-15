@@ -338,12 +338,12 @@ a {
         &:not(.first) {
           &::before {
             content: '';
-            height: 10px;
+            height: 100%;
             width: 2px;
             background: $--color-green;
             position: absolute;
             left: 8px;
-            top: -20px;
+            top: 0;
             z-index: 1;
             opacity: 0;
           }
@@ -399,6 +399,10 @@ a {
         font-weight: 300;
         text-transform: capitalize;
         opacity: 0;
+        flex: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }
