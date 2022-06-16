@@ -38,12 +38,12 @@ export function addClassForAnimation({ className, element, timeSet = 600 }) {
   });
 }
 
-export function addAnimation({ element, animationName, timeSet = 600 }) {
+export function addAnimation({ element, animationName, timeSet = 600, hasDisplay = true }) {
   return new Promise((res) => {
     element.setAttribute(
       'style',
       `
-      display: block;
+      ${hasDisplay ? 'display: block;' : ''}
       animation: ${animationName} ${timeSet}ms ease-in-out forwards;
     `,
     );
@@ -80,4 +80,52 @@ export function removeAnimation({ element, timeSet = 0, justAnimation = false })
       res(element);
     }, timeSet);
   });
+}
+
+export function eventClearContentInput({ elementLink, elementClear }) {
+  elementClear.addEventListener('click', function () {
+    elementLink.value = '';
+  });
+
+  elementLink.addEventListener('focusin', function () {
+    if (this.value && !elementClear.className.includes('active')) {
+      elementClear.classList.add('active');
+    }
+  });
+
+  elementLink.addEventListener('input', function () {
+    const val = this.value;
+    if (val && !elementClear.className.includes('active')) {
+      elementClear.classList.add('active');
+    } else if (!val) {
+      elementClear.classList.remove('active');
+    }
+  });
+
+  elementLink.addEventListener('focusout', function () {
+    if (elementClear.className.includes('active')) {
+      elementClear.classList.remove('active');
+    }
+  });
+}
+
+export async function appendFormLink({ element }) {
+  const mission = document.createElement('div');
+  mission.classList.add('form-control');
+  mission.innerHTML = `
+    <div class="form--wrap">
+      <input spellcheck="false" class="form--wrap__fill link--image"
+        value="https://blogtruyen.vn/25863/vi-tieu-thu-healer-hang-e" type="text" placeholder="Link manga..." />
+      <span class="form--wrap__clear material-symbols-outlined">backspace</span>
+    </div>
+    <button class="btn btn--primary form-control__btn btn--clear-link">
+      <span class="material-symbols-outlined">
+        remove
+      </span>
+    </button>
+  `;
+  element.insertBefore(mission, element.lastElementChild);
+  await addAnimation({ element: mission, animationName: 'fadeInZoom', timeSet: 400, hasDisplay: false });
+
+  return Promise.resolve(mission);
 }

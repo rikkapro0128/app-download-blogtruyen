@@ -1,11 +1,16 @@
-import event, { miruSend } from './event';
+import { tooltipInit } from './tooltip';
 import toast from './toasts/web';
-import { addAnimation, removeAnimation, addStyleSmooth } from './utils';
 // import toast from './toasts/win';
+import event, { miruSend } from './event';
+import { addAnimation, removeAnimation, addStyleSmooth, appendFormLink, eventClearContentInput } from './utils';
 
 document.addEventListener('DOMContentLoaded', async function () {
+  // AREA ELEMENT ADD MORE LINK
+
+  const eleBtnAddlink = document.querySelector('.form--add');
+
   // AREA ELEMENT INTERACT BODY CONTENT
-  const eleLink = document.getElementById('link--image');
+  const eleLink = document.querySelector('.link--image');
   const eleInteract = document.querySelector('.interactive');
   const eleClearInput = document.querySelector('.form--wrap__clear');
   const eleTaskComplete = document.querySelector('.tasks--complete');
@@ -36,7 +41,24 @@ document.addEventListener('DOMContentLoaded', async function () {
   // AREA ELEMENT CONTROL DOWNLOAD
   const eleControlPause = document.querySelector('.control--download__pause');
   const eleControlStop = document.querySelector('.control--download__stop');
-  const eleBtnDownload = document.getElementById('btn--download');
+  // const eleBtnDownload = document.getElementById('btn--download');
+
+  eleBtnAddlink.addEventListener('click', async function (event) {
+    const parent = this.parentNode;
+    const value = parent.offsetHeight + 48;
+    parent.style.height = `${parent.offsetHeight + 48}px`;
+    const nodeAfterAppend = await appendFormLink({ element: this.parentNode });
+    eventClearContentInput({
+      elementLink: nodeAfterAppend.querySelector('.link--image'),
+      elementClear: nodeAfterAppend.querySelector('.form--wrap__clear'),
+    });
+    nodeAfterAppend.querySelector('.btn--clear-link').addEventListener('click', async function () {
+      const value = parent.offsetHeight - 48;
+      parent.style.height = `${value}px`;
+      await addAnimation({ element: nodeAfterAppend, animationName: 'fadeOutZoom', timeSet: 300, hasDisplay: false });
+      nodeAfterAppend.remove();
+    });
+  });
 
   eleBtnSavePath.addEventListener('click', async function () {
     const pathIsNew = localStorage.getItem('pathStorageNew');
@@ -110,29 +132,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
   });
 
-  eleBtnDownload.addEventListener('click', async function () {
-    const url = eleLink.value;
-    const testParternUrl = /http[s]?:\/\/blogtruyen.vn/g.test(url);
-    if (url) {
-      if (testParternUrl) {
-        await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
-        await addAnimation({ element: eleWelcome, animationName: 'welcomeOut', timeSet: 400 });
-        await removeAnimation({ element: eleInteract });
-        await removeAnimation({ element: eleWelcome });
-        await addAnimation({ element: eleWelcomeTaskRunning, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
-        await addAnimation({ element: eleControlPause, animationName: 'sideRightToLeft', timeSet: 400 });
-        await addAnimation({ element: eleControlStop, animationName: 'sideRightToLeft', timeSet: 400 });
-        await addAnimation({ element: eleProgressBar, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
-        await addAnimation({ element: eleTaskComplete, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
-        // Wait for animation ended!
-        miruSend.linkToIPC(url);
-      } else {
-        toast.error('Link is Invalid!');
-      }
-    } else {
-      toast.error('Link not found!');
-    }
-  });
+  // eleBtnDownload.addEventListener('click', async function () {
+  //   const url = eleLink.value;
+  //   const testParternUrl = /http[s]?:\/\/blogtruyen.vn/g.test(url);
+  //   if (url) {
+  //     if (testParternUrl) {
+  //       await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
+  //       await addAnimation({ element: eleWelcome, animationName: 'welcomeOut', timeSet: 400 });
+  //       await removeAnimation({ element: eleInteract });
+  //       await removeAnimation({ element: eleWelcome });
+  //       await addAnimation({ element: eleWelcomeTaskRunning, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+  //       await addAnimation({ element: eleControlPause, animationName: 'sideRightToLeft', timeSet: 400 });
+  //       await addAnimation({ element: eleControlStop, animationName: 'sideRightToLeft', timeSet: 400 });
+  //       await addAnimation({ element: eleProgressBar, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+  //       await addAnimation({ element: eleTaskComplete, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+  //       // Wait for animation ended!
+  //       miruSend.linkToIPC(url);
+  //     } else {
+  //       toast.error('Link is Invalid!');
+  //     }
+  //   } else {
+  //     toast.error('Link not found!');
+  //   }
+  // });
 
   eleNodeSetting.addEventListener('click', async function () {
     await addAnimation({ element: eleNodeSetting, animationName: 'hideDeep', timeSet: 200 });
@@ -147,32 +169,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     await addAnimation({ element: eleNodeSetting, animationName: 'outstanding', timeSet: 200 });
   });
 
-  eleClearInput.addEventListener('click', function () {
-    eleLink.value = '';
-  });
-
-  eleLink.addEventListener('focusin', function () {
-    if (this.value && !eleClearInput.className.includes('active')) {
-      eleClearInput.classList.add('active');
-    }
-  });
-
-  eleLink.addEventListener('input', function () {
-    const val = this.value;
-    if (val && !eleClearInput.className.includes('active')) {
-      eleClearInput.classList.add('active');
-    } else if (!val) {
-      eleClearInput.classList.remove('active');
-    }
-  });
-
-  eleLink.addEventListener('focusout', function () {
-    if (eleClearInput.className.includes('active')) {
-      eleClearInput.classList.remove('active');
-    }
-  });
-
   event();
+  tooltipInit();
+  eventClearContentInput({ elementLink: eleLink, elementClear: eleClearInput });
 
   await addAnimation({ element: eleInteract, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
   await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
