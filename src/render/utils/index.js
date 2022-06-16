@@ -82,7 +82,7 @@ export function removeAnimation({ element, timeSet = 0, justAnimation = false })
   });
 }
 
-export function eventClearContentInput({ elementLink, elementClear }) {
+export function addEventClearContentInput({ elementLink, elementClear }) {
   elementClear.addEventListener('click', function () {
     elementLink.value = '';
   });
@@ -114,13 +114,17 @@ export async function appendFormLink({ element }) {
   mission.classList.add('form-control');
   mission.innerHTML = `
     <div class="form--wrap">
-      <input spellcheck="false" class="form--wrap__fill link--image"
-        value="https://blogtruyen.vn/25863/vi-tieu-thu-healer-hang-e" type="text" placeholder="Link manga..." />
+      <input spellcheck="false" class="form--wrap__fill link--image" type="text" placeholder="Link manga..." />
       <span class="form--wrap__clear material-symbols-outlined">backspace</span>
     </div>
-    <button class="btn btn--primary form-control__btn btn--clear-link">
+    <button class="btn btn--primary form-control__clear-fill">
+    <span class="material-symbols-outlined">
+    remove
+    </span>
+    </button>
+    <button class="btn btn--primary form-control__setting">
       <span class="material-symbols-outlined">
-        remove
+        settings
       </span>
     </button>
   `;
@@ -128,4 +132,12 @@ export async function appendFormLink({ element }) {
   await addAnimation({ element: mission, animationName: 'fadeInZoom', timeSet: 400, hasDisplay: false });
 
   return Promise.resolve(mission);
+}
+
+export function toggleClassBindElement({ element, className = 'active' }) {
+  if (element.className.includes(className)) {
+    element.classList.remove(className);
+  } else {
+    element.classList.add(className);
+  }
 }

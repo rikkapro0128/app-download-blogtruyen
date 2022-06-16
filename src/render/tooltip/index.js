@@ -4,5 +4,7 @@ export const tooltipInit = () => {
   tippy('[data-tippy-content]', {
     placement: 'right',
     theme: 'miru',
+    delay: 1000,
+    duration: 100,
   });
 };

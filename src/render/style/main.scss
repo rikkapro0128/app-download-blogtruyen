@@ -185,6 +185,7 @@ a {
         width: 20rem;
         margin: 0 auto;
         position: relative;
+        margin-top: 3rem;
         &::before {
           position: absolute;
           content: '';
@@ -455,16 +456,33 @@ a {
           }
         }
       }
-      &__btn {
+      & > button {
         margin-left: 1rem;
         padding: 0 1rem;
+        transition: color 200ms ease-in-out;
+        font-size: 2rem;
         span {
-          position: relative;
-          top: 2px;
-          transition: color 200ms ease-in-out;
-          &:hover {
-            color: $--color-red;
+          display: block;
+          pointer-events: none;
+        }
+      }
+      &__setting {
+        span {
+          transition: transform 200ms ease-in-out, color 200ms ease-in-out;
+        }
+        &.active {
+          span {
+            transform: rotate(-70deg);
+            color: $--color-green;
           }
+        }
+        &:hover {
+          color: $--color-blue;
+        }
+      }
+      &__clear-fill {
+        &:hover {
+          color: $--color-red;
         }
       }
     }
@@ -475,8 +493,7 @@ a {
         color: inherit;
         font-size: 1.6rem;
         font-weight: 700;
-        position: relative;
-        top: 3px;
+        display: block;
       }
     }
   }

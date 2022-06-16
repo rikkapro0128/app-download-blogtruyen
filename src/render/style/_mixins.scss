@@ -11,6 +11,10 @@
   cursor: pointer;
   text-transform: capitalize;
   transition: all 200ms linear;
+  & > * {
+    color: inherit;
+    font-size: inherit;
+  }
   &--primary {
     &:hover {
       color: $--color-blue;

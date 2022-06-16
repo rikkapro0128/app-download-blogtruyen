@@ -2,7 +2,14 @@ import { tooltipInit } from './tooltip';
 import toast from './toasts/web';
 // import toast from './toasts/win';
 import event, { miruSend } from './event';
-import { addAnimation, removeAnimation, addStyleSmooth, appendFormLink, eventClearContentInput } from './utils';
+import {
+  addAnimation,
+  removeAnimation,
+  addStyleSmooth,
+  appendFormLink,
+  addEventClearContentInput,
+  toggleClassBindElement,
+} from './utils';
 
 document.addEventListener('DOMContentLoaded', async function () {
   // AREA ELEMENT ADD MORE LINK
@@ -32,6 +39,9 @@ document.addEventListener('DOMContentLoaded', async function () {
   // ELEMENT WRAP CONTENT
   const eleWrap = document.querySelector('html');
 
+  // DEFINE VARIABLE SCOPE GLOBAL
+  let checkAnimationAddLinkDone = true; // true is done and otherwhise
+
   // AREA MANAGER POPUP ELEMENT
   const elePopupLocation = document.querySelector('.save--location');
   const elePopupOptions = document.querySelector('.save--options');
@@ -44,20 +54,52 @@ document.addEventListener('DOMContentLoaded', async function () {
   // const eleBtnDownload = document.getElementById('btn--download');
 
   eleBtnAddlink.addEventListener('click', async function (event) {
-    const parent = this.parentNode;
-    const value = parent.offsetHeight + 48;
-    parent.style.height = `${parent.offsetHeight + 48}px`;
-    const nodeAfterAppend = await appendFormLink({ element: this.parentNode });
-    eventClearContentInput({
-      elementLink: nodeAfterAppend.querySelector('.link--image'),
-      elementClear: nodeAfterAppend.querySelector('.form--wrap__clear'),
-    });
-    nodeAfterAppend.querySelector('.btn--clear-link').addEventListener('click', async function () {
-      const value = parent.offsetHeight - 48;
+    if (checkAnimationAddLinkDone) {
+      checkAnimationAddLinkDone = false; // toggle flag
+
+      addAnimation({ element: this, animationName: 'fadeOut', timeSet: 0 });
+      // block set width to smooth animation
+      const parent = this.parentNode;
+      const value = parent.offsetHeight + 48;
       parent.style.height = `${value}px`;
-      await addAnimation({ element: nodeAfterAppend, animationName: 'fadeOutZoom', timeSet: 300, hasDisplay: false });
-      nodeAfterAppend.remove();
-    });
+
+      const nodeAfterAppend = await appendFormLink({ element: this.parentNode });
+      addEventClearContentInput({
+        elementLink: nodeAfterAppend.querySelector('.link--image'),
+        elementClear: nodeAfterAppend.querySelector('.form--wrap__clear'),
+      });
+
+      addAnimation({ element: this, animationName: 'fadeIn', timeSet: 200 });
+      nodeAfterAppend.querySelector('.form-control__clear-fill').addEventListener('click', async function () {
+        if (checkAnimationAddLinkDone) {
+          checkAnimationAddLinkDone = false; // toggle flag
+
+          const value = parent.offsetHeight - 48;
+          parent.style.height = `${value}px`;
+          await addAnimation({
+            element: nodeAfterAppend,
+            animationName: 'fadeOutZoom',
+            timeSet: 300,
+            hasDisplay: false,
+          });
+          nodeAfterAppend.remove();
+
+          checkAnimationAddLinkDone = true; // toggle flag
+        }
+      });
+
+      nodeAfterAppend.querySelector('.form-control__setting').addEventListener('click', function (event) {
+        if (checkAnimationAddLinkDone) {
+          checkAnimationAddLinkDone = false; // toggle flag
+
+          toggleClassBindElement({ element: event.target });
+
+          checkAnimationAddLinkDone = true; // toggle flag
+        }
+      });
+
+      checkAnimationAddLinkDone = true; // toggle flag
+    }
   });
 
   eleBtnSavePath.addEventListener('click', async function () {
@@ -169,10 +211,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     await addAnimation({ element: eleNodeSetting, animationName: 'outstanding', timeSet: 200 });
   });
 
-  event();
-  tooltipInit();
-  eventClearContentInput({ elementLink: eleLink, elementClear: eleClearInput });
-
+  // deflaut run this code below when content load
+  event(); // init many event when main process sending
+  tooltipInit(); // options for every tooltip setting
+  document.querySelector('.form-control.default > .form-control__setting').addEventListener('click', function (event) {
+    toggleClassBindElement({ element: this });
+  });
+  addEventClearContentInput({ elementLink: eleLink, elementClear: eleClearInput }); // add event element clear content input for (link-input)
+  // deflaut animation run below when content load
   await addAnimation({ element: eleInteract, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
   await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
 });
