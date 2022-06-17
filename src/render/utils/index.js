@@ -113,20 +113,24 @@ export async function appendFormLink({ element }) {
   const mission = document.createElement('div');
   mission.classList.add('form-control');
   mission.innerHTML = `
-    <div class="form--wrap">
-      <input spellcheck="false" class="form--wrap__fill link--image" type="text" placeholder="Link manga..." />
-      <span class="form--wrap__clear material-symbols-outlined">backspace</span>
+  <div class="form-control__wrap--top">
+    <!-- input link clone manga -->
+    <div class="form-control__wrap--top__input">
+      <input spellcheck="false" class="link--image form-control__wrap--top__input--fill"
+        value="https://blogtruyen.vn/25863/vi-tieu-thu-healer-hang-e" type="text" placeholder="Link manga..." />
+      <span class="form-control__wrap--top__input--clear material-symbols-outlined">backspace</span>
     </div>
-    <button class="btn btn--primary form-control__clear-fill">
-    <span class="material-symbols-outlined">
-    remove
-    </span>
+    <!-- button to clear container input link -->
+    <button class="form-control__wrap--top__clear-fill btn btn--primary">
+      <span class="material-symbols-outlined"> remove </span>
     </button>
-    <button class="btn btn--primary form-control__setting">
-      <span class="material-symbols-outlined">
-        settings
-      </span>
+    <!-- button to open setting clone -->
+    <button class="form-control__wrap--top__setting btn btn--primary">
+      <span class="material-symbols-outlined"> settings </span>
     </button>
+  </div>
+  <!-- box option to clone -->
+  <div class="form-control__options"></div>
   `;
   element.insertBefore(mission, element.lastElementChild);
   await addAnimation({ element: mission, animationName: 'fadeInZoom', timeSet: 400, hasDisplay: false });
@@ -134,10 +138,61 @@ export async function appendFormLink({ element }) {
   return Promise.resolve(mission);
 }
 
-export function toggleClassBindElement({ element, className = 'active' }) {
+export async function toggleClassBindElement({
+  element,
+  className = 'active',
+  cbActive = undefined,
+  cbNoActive = undefined,
+}) {
   if (element.className.includes(className)) {
     element.classList.remove(className);
+    if (typeof cbNoActive === 'function') {
+      await addAnimation({
+        element: element.closest('.form-control').querySelector('.form-control__options'),
+        animationName: 'fadeOutZoom',
+        timeSet: 200,
+      });
+      await cbNoActive({ eleBtnSetting: element, margin: 10 });
+    }
   } else {
     element.classList.add(className);
+    if (typeof cbActive === 'function') {
+      const eleOption = await cbActive({ eleBtnSetting: element, margin: 10 });
+      await addAnimation({ element: eleOption, animationName: 'fadeInZoom', timeSet: 200 });
+    }
   }
+}
+
+export function openSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) {
+  return new Promise((res) => {
+    const parent = eleBtnSetting.closest('.form-control');
+    const eleOptions = parent.querySelector('.form-control__options');
+    const heightOption = getHeightWhenDisplayNone({ element: eleOptions }) + margin;
+    parent.style.height = `${eleBtnSetting.offsetHeight + heightOption}px`;
+    setTimeout(() => {
+      res(eleOptions);
+    }, timeSet);
+  });
+}
+
+export function closeSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) {
+  return new Promise((res) => {
+    const parent = eleBtnSetting.closest('.form-control');
+    const eleOptions = parent.querySelector('.form-control__options');
+    const heightOption = getHeightWhenDisplayNone({ element: eleOptions }) + margin;
+    parent.style.height = `${eleBtnSetting.offsetHeight + heightOption - heightOption}px`;
+    setTimeout(() => {
+      res(eleOptions);
+    }, timeSet);
+  });
+}
+
+export function getHeightWhenDisplayNone({ element, customDisplay = undefined }) {
+  let height = 0;
+  element.style.visibility = 'hidden';
+  element.style.display = customDisplay ? customDisplay : 'block';
+  height = element.offsetHeight;
+  element.style.visibility = 'visible';
+  element.style.display = 'none';
+  return height;
 }

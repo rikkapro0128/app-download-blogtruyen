@@ -14,19 +14,25 @@
       <div class="interactive">
         <h3 class="interactive__title">link donwload</h3>
         <div class="form-control default">
-          <div class="form--wrap">
-            <input
-              spellcheck="false"
-              class="link--image form--wrap__fill"
-              value="https://blogtruyen.vn/25863/vi-tieu-thu-healer-hang-e"
-              type="text"
-              placeholder="Link manga..."
-            />
-            <span class="form--wrap__clear material-symbols-outlined">backspace</span>
+          <div class="form-control__wrap--top">
+            <!-- input link clone manga -->
+            <div class="form-control__wrap--top__input">
+              <input
+                spellcheck="false"
+                class="link--image form-control__wrap--top__input--fill"
+                value="https://blogtruyen.vn/25863/vi-tieu-thu-healer-hang-e"
+                type="text"
+                placeholder="Link manga..."
+              />
+              <span class="form-control__wrap--top__input--clear material-symbols-outlined">backspace</span>
+            </div>
+            <!-- button to open setting clone -->
+            <button class="form-control__wrap--top__setting btn btn--primary">
+              <span class="material-symbols-outlined"> settings </span>
+            </button>
           </div>
-          <button class="form-control__setting btn btn--primary">
-            <span class="material-symbols-outlined"> settings </span>
-          </button>
+          <!-- box option to clone -->
+          <div class="form-control__options"></div>
         </div>
         <!-- <button id="btn--download" class="btn btn--primary form-control__btn">download</button> -->
         <button data-tippy-content="add link" class="form--add btn btn--primary">
