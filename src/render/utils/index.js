@@ -153,7 +153,7 @@ export async function toggleClassBindElement({
     }
 
     element.classList.remove('running');
-  } else {
+  } else if (!element.className.includes(className) && !element.className.includes('running')) {
     element.classList.add('running');
 
     element.classList.add(className);
@@ -165,33 +165,27 @@ export async function toggleClassBindElement({
   }
 }
 
-export function openSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) {
-  return new Promise(async (res) => {
-    const parent = eleBtnSetting.closest('.form-control');
-    const eleInteractive = parent.parentNode;
-    const eleOptions = parent.querySelector('.form-control__options');
-    const heightOption = getHeightWhenDisplayNone({ element: eleOptions }) + margin;
-    parent.style.height = `${eleBtnSetting.offsetHeight + heightOption}px`;
-    eleInteractive.style.height = `${eleInteractive.offsetHeight + heightOption}px`;
-    await addAnimation({ element: eleOptions, animationName: 'fadeInZoom', timeSet: 200 });
-    res(eleOptions);
-  });
+export async function openSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) {
+  const parent = eleBtnSetting.closest('.form-control');
+  const eleInteractive = parent.parentNode;
+  const eleOptions = parent.querySelector('.form-control__options');
+  const heightOption = getHeightWhenDisplayNone({ element: eleOptions }) + margin;
+  parent.style.height = `${eleBtnSetting.offsetHeight + heightOption}px`;
+  eleInteractive.style.height = `${eleInteractive.offsetHeight + heightOption}px`;
+  await addAnimation({ element: eleOptions, animationName: 'fadeInZoom', timeSet: 200 });
 }
 
-export function closeSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) {
-  return new Promise(async (res) => {
-    const parent = eleBtnSetting.closest('.form-control');
-    const eleInteractive = parent.parentNode;
-    const eleOptions = parent.querySelector('.form-control__options');
-    const heightOption = getHeightWhenDisplayNone({ element: eleOptions }) + margin;
-    parent.style.height = `${eleBtnSetting.offsetHeight}px`;
-    eleInteractive.style.height = `${eleInteractive.offsetHeight - heightOption}px`;
-    await addAnimation({
-      element: eleBtnSetting.closest('.form-control').querySelector('.form-control__options'),
-      animationName: 'fadeOutZoom',
-      timeSet: 200,
-    });
-    res(eleOptions);
+export async function closeSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) {
+  const parent = eleBtnSetting.closest('.form-control');
+  const eleInteractive = parent.parentNode;
+  const eleOptions = parent.querySelector('.form-control__options');
+  const heightOption = getHeightWhenDisplayNone({ element: eleOptions }) + margin;
+  parent.style.height = `${eleBtnSetting.offsetHeight}px`;
+  eleInteractive.style.height = `${eleInteractive.offsetHeight - heightOption}px`;
+  await addAnimation({
+    element: eleBtnSetting.closest('.form-control').querySelector('.form-control__options'),
+    animationName: 'fadeOutZoom',
+    timeSet: 200,
   });
 }
 

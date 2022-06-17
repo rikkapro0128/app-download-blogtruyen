@@ -79,7 +79,8 @@ document.addEventListener('DOMContentLoaded', async function () {
           if (checkAnimationAddLinkDone) {
             checkAnimationAddLinkDone = false; // toggle flag
 
-            const value = parent.offsetHeight - 48;
+            const getHeightFormControl = this.closest('.form-control').offsetHeight + 10;
+            const value = parent.offsetHeight - getHeightFormControl;
             parent.style.height = `${value}px`;
             await addAnimation({
               element: nodeAfterAppend,
@@ -221,7 +222,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   tooltipInit(); // options for every tooltip setting
   document
     .querySelector('.form-control.default .form-control__wrap--top__setting')
-    .addEventListener('click', async function (event) {
+    .addEventListener('click', async function () {
       await toggleClassBindElement({ element: this, cbActive: openSetting, cbNoActive: closeSetting });
     });
   addEventClearContentInput({ elementLink: eleLink, elementClear: eleClearInput }); // add event element clear content input for (link-input)
