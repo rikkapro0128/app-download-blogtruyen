@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   // const eleBtnDownload = document.getElementById('btn--download');
 
   eleBtnAddlink.addEventListener('click', async function (event) {
-    if (checkAnimationAddLinkDone) {
-      checkAnimationAddLinkDone = false; // toggle flag
+    if (!this.className.includes('running')) {
+      this.classList.add('running'); // toggle flag
 
       addAnimation({ element: this, animationName: 'fadeOut', timeSet: 0 });
       // block set width to smooth animation
@@ -76,35 +76,34 @@ document.addEventListener('DOMContentLoaded', async function () {
       nodeAfterAppend
         .querySelector('.form-control__wrap--top__clear-fill')
         .addEventListener('click', async function () {
-          if (checkAnimationAddLinkDone) {
-            checkAnimationAddLinkDone = false; // toggle flag
+          const eleParent = this.closest('.interactive');
+          if (!eleParent.className.includes('running')) {
+            eleParent.classList.add('running'); // toggle flag
 
             const getHeightFormControl = this.closest('.form-control').offsetHeight + 10;
-            const value = parent.offsetHeight - getHeightFormControl;
-            parent.style.height = `${value}px`;
+            const eleOptions = nodeAfterAppend.querySelector('.form-control__options');
+            const value = eleParent.offsetHeight - getHeightFormControl;
+            removeAnimation({ element: eleOptions });
+            eleOptions.style.display = 'none';
             await addAnimation({
               element: nodeAfterAppend,
               animationName: 'fadeOutZoom',
               timeSet: 300,
-              hasDisplay: false,
             });
+            eleParent.style.height = `${value}px`;
             nodeAfterAppend.remove();
-
-            checkAnimationAddLinkDone = true; // toggle flag
+            setTimeout(() => {
+              // wait for transition default by 200ms
+              eleParent.classList.remove('running'); // toggle flag
+            }, 200);
           }
         });
 
       nodeAfterAppend.querySelector('.form-control__wrap--top__setting').addEventListener('click', function (event) {
-        if (checkAnimationAddLinkDone) {
-          checkAnimationAddLinkDone = false; // toggle flag
-
-          toggleClassBindElement({ element: event.target, cbActive: openSetting, cbNoActive: closeSetting });
-
-          checkAnimationAddLinkDone = true; // toggle flag
-        }
+        toggleClassBindElement({ element: event.target, cbActive: openSetting, cbNoActive: closeSetting });
       });
 
-      checkAnimationAddLinkDone = true; // toggle flag
+      this.classList.remove('running'); // toggle flag
     }
   });
 
@@ -118,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       toast.open({ type: 'warning', message: 'Not change!' });
     }
     await addAnimation({ element: elePopupSetting, animationName: 'fadeOut', timeSet: 400 });
-    await removeAnimation({ element: elePopupSetting });
+    removeAnimation({ element: elePopupSetting });
   });
 
   eleChoosePathSave.addEventListener('click', function () {
@@ -156,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       elePopupSetting.classList.remove(elePopupSetting.className.split(' ')[1]);
       // load for animation
       await addAnimation({ element: elePopupSetting, animationName: 'fadeOut', timeSet: 400 });
-      await removeAnimation({ element: elePopupSetting });
+      removeAnimation({ element: elePopupSetting });
       popupElement.style.display = 'none';
     });
   });
@@ -167,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       const popupElement = elePopupSetting.querySelector(`.save--${popupName}`);
       this.classList.remove(popupName);
       await addAnimation({ element: this, animationName: 'fadeOut', timeSet: 400 });
-      await removeAnimation({ element: this });
+      removeAnimation({ element: this });
       popupElement.style.display = 'none';
     }
   });
@@ -187,8 +186,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   //     if (testParternUrl) {
   //       await addAnimation({ element: eleInteract, animationName: 'fadeOutVeriticalToTop', timeSet: 400 });
   //       await addAnimation({ element: eleWelcome, animationName: 'welcomeOut', timeSet: 400 });
-  //       await removeAnimation({ element: eleInteract });
-  //       await removeAnimation({ element: eleWelcome });
+  //       removeAnimation({ element: eleInteract });
+  //       removeAnimation({ element: eleWelcome });
   //       await addAnimation({ element: eleWelcomeTaskRunning, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
   //       await addAnimation({ element: eleControlPause, animationName: 'sideRightToLeft', timeSet: 400 });
   //       await addAnimation({ element: eleControlStop, animationName: 'sideRightToLeft', timeSet: 400 });

@@ -181,6 +181,7 @@ a {
     &--no-tasks {
       width: 100%;
       display: none;
+      border-top: 1px solid $--color-red;
       &__wrap--img {
         width: 20rem;
         margin: 0 auto;

@@ -40,6 +40,14 @@ export function addClassForAnimation({ className, element, timeSet = 600 }) {
 
 export function addAnimation({ element, animationName, timeSet = 600, hasDisplay = true }) {
   return new Promise((res) => {
+    // element.addEventListener('animationstart', function () { console.log('start animation!'); res(element) });
+    element.addEventListener(
+      'animationend',
+      function () {
+        res(element);
+      },
+      false,
+    );
     element.setAttribute(
       'style',
       `
@@ -47,9 +55,6 @@ export function addAnimation({ element, animationName, timeSet = 600, hasDisplay
       animation: ${animationName} ${timeSet}ms ease-in-out forwards;
     `,
     );
-    setTimeout(() => {
-      res(element);
-    }, timeSet);
   });
 }
 
@@ -69,17 +74,12 @@ export function addStyleSmooth({ element, propStyle, delay = 5, timeSet = 400 })
   });
 }
 
-export function removeAnimation({ element, timeSet = 0, justAnimation = false }) {
-  return new Promise((res) => {
-    if (justAnimation) {
-      element.setAttribute('style', 'display: block;');
-    } else {
-      element.setAttribute('style', '');
-    }
-    setTimeout(() => {
-      res(element);
-    }, timeSet);
-  });
+export function removeAnimation({ element, justAnimation = false }) {
+  if (justAnimation) {
+    element.setAttribute('style', 'display: block;');
+  } else {
+    element.setAttribute('style', '');
+  }
 }
 
 export function addEventClearContentInput({ elementLink, elementClear }) {
