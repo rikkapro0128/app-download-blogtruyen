@@ -25,6 +25,10 @@
     color: $--color-white;
     transition: opacity 200ms linear;
   }
+  &--blue {
+    background: $--color-blue;
+    color: $--color-white;
+  }
   &:hover {
     opacity: 0.9;
   }
