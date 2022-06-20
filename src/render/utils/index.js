@@ -1,22 +1,34 @@
 import toast from '../toasts/web';
 
 export function initRangeClone({ formOptions }) {
-  const range = parseInt(formOptions.getAttribute('range'));
+  // element button
+  const eleStartCloneReduce = formOptions.querySelector('.wrap--insert--number.start .fill--number__reduce');
+  const eleStartCloneUp = formOptions.querySelector('.wrap--insert--number.start .fill--number__increase');
+  const eleEndCloneReduce = formOptions.querySelector('.wrap--insert--number.end .fill--number__reduce');
+  const eleEndCloneUp = formOptions.querySelector('.wrap--insert--number.end .fill--number__increase');
+
+  // init value reduce & up value
+  const eleStartValue = formOptions.querySelector('.wrap--insert--number.start .fill--number__show--number'); // this element INPUT
+  const eleEndValue = formOptions.querySelector('.wrap--insert--number.end .fill--number__show--number'); // this element INPUT
+
+  const eleStartTitle = formOptions.querySelector('.wrap--insert--number.start .insert--number__title--custom'); // this element TITLE
+  const eleEndTitle = formOptions.querySelector('.wrap--insert--number.end .insert--number__title--custom'); // this element TITLE
+
+  let range = parseInt(formOptions.getAttribute('range'));
+  let paternTitle = `${0} - ${range}`;
+
+  const observer = new MutationObserver(function (mutationList) {
+    mutationList.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'range') {
+        range = parseInt(mutation.target.getAttribute(mutation.attributeName));
+        paternTitle = `${0} - ${range}`;
+        eleStartTitle.innerText = paternTitle;
+        eleEndTitle.innerText = paternTitle;
+      }
+    });
+  });
+  observer.observe(formOptions, { attributes: true });
   if (range) {
-    // element button
-    const eleStartCloneReduce = formOptions.querySelector('.wrap--insert--number.start .fill--number__reduce');
-    const eleStartCloneUp = formOptions.querySelector('.wrap--insert--number.start .fill--number__increase');
-    const eleEndCloneReduce = formOptions.querySelector('.wrap--insert--number.end .fill--number__reduce');
-    const eleEndCloneUp = formOptions.querySelector('.wrap--insert--number.end .fill--number__increase');
-
-    // init value reduce & up value
-    const eleStartValue = formOptions.querySelector('.wrap--insert--number.start .fill--number__show--number'); // this element INPUT
-    const eleEndValue = formOptions.querySelector('.wrap--insert--number.end .fill--number__show--number'); // this element INPUT
-
-    const eleStartTitle = formOptions.querySelector('.wrap--insert--number.start .insert--number__title--custom'); // this element TITLE
-    const eleEndTitle = formOptions.querySelector('.wrap--insert--number.end .insert--number__title--custom'); // this element TITLE
-    let paternTitle = `${0} - ${range}`;
-
     eleStartValue.value = 0;
     eleEndValue.value = range;
 
@@ -398,6 +410,7 @@ export async function closeSetting({ eleBtnSetting, margin = 0, timeSet = 200 })
     animationName: 'fadeOutZoom',
     timeSet: 200,
   });
+  removeAnimation({ element: eleOptions });
 }
 
 export function getHeightWhenDisplayNone({ element, customDisplay = undefined }) {
