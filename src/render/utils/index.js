@@ -1,6 +1,100 @@
+import toast from '../toasts/web';
+
+export function initRangeClone({ formOptions }) {
+  const range = parseInt(formOptions.getAttribute('range'));
+  if (range) {
+    // element button
+    const eleStartCloneReduce = formOptions.querySelector('.wrap--insert--number.start .fill--number__reduce');
+    const eleStartCloneUp = formOptions.querySelector('.wrap--insert--number.start .fill--number__increase');
+    const eleEndCloneReduce = formOptions.querySelector('.wrap--insert--number.end .fill--number__reduce');
+    const eleEndCloneUp = formOptions.querySelector('.wrap--insert--number.end .fill--number__increase');
+
+    // init value reduce & up value
+    const eleStartValue = formOptions.querySelector('.wrap--insert--number.start .fill--number__show--number'); // this element INPUT
+    const eleEndValue = formOptions.querySelector('.wrap--insert--number.end .fill--number__show--number'); // this element INPUT
+
+    const eleStartTitle = formOptions.querySelector('.wrap--insert--number.start .insert--number__title--custom'); // this element TITLE
+    const eleEndTitle = formOptions.querySelector('.wrap--insert--number.end .insert--number__title--custom'); // this element TITLE
+    let paternTitle = `${0} - ${range}`;
+
+    eleStartValue.value = 0;
+    eleEndValue.value = range;
+
+    eleStartTitle.innerText = paternTitle;
+    eleEndTitle.innerText = paternTitle;
+    // when change input
+    eleStartValue.addEventListener('input', function () {
+      const numberStartPresent = parseInt(eleStartValue.value);
+      const numberEndPresent = parseInt(eleEndValue.value);
+      if (isNaN(numberStartPresent) || isNaN(numberEndPresent)) {
+        toast.error('Value not number!');
+        this.value = 0;
+      } else if (!(numberStartPresent < numberEndPresent)) {
+        toast.error('Start-clone must be less End-clone!');
+        this.value = 0;
+      }
+    });
+    // when change input
+    eleEndValue.addEventListener('input', function () {
+      const numberStartPresent = parseInt(eleStartValue.value);
+      const numberEndPresent = parseInt(eleEndValue.value);
+      if (isNaN(numberStartPresent) || isNaN(numberEndPresent)) {
+        toast.error('Value not number!');
+        this.value = range;
+      } else if (!(numberEndPresent > numberStartPresent)) {
+        toast.error('End-clone must be bigger Start-clone!');
+        this.value = range;
+      } else if (numberEndPresent > range) {
+        toast.error('End-clone must be less Range!');
+        this.value = range;
+      }
+    });
+
+    eleStartCloneReduce.addEventListener('click', function () {
+      const numberStartPresent = parseInt(eleStartValue.value);
+      if (numberStartPresent > 0) {
+        eleStartValue.value = numberStartPresent - 1;
+      }
+    });
+    // start clone increase number
+    eleStartCloneUp.addEventListener('click', function () {
+      const numberStartPresent = parseInt(eleStartValue.value);
+      const numberEndPresent = parseInt(eleEndValue.value);
+      if (numberStartPresent < range && numberStartPresent + 1 < numberEndPresent) {
+        eleStartValue.value = numberStartPresent + 1;
+      }
+    });
+    // end clone reduce number
+    eleEndCloneReduce.addEventListener('click', function () {
+      const numberStartPresent = parseInt(eleStartValue.value);
+      const numberEndPresent = parseInt(eleEndValue.value);
+      if (numberEndPresent > 0 && numberStartPresent + 1 < numberEndPresent) {
+        eleEndValue.value = numberEndPresent - 1;
+      }
+    });
+    // end clone increase number
+    eleEndCloneUp.addEventListener('click', function () {
+      const numberEndPresent = parseInt(eleEndValue.value);
+      if (numberEndPresent < range) {
+        eleEndValue.value = numberEndPresent + 1;
+      }
+    });
+  }
+}
+
+export function initAddressForm({ elementForm }) {
+  let timestamp = Math.round(Date.now() % 10000000);
+  elementForm.setAttribute('form-addresss', timestamp);
+}
+
 export function initSelect({ element }) {
   const eleContentSelected = element.querySelector('.select--show__content');
+  const subPanel = element.querySelector('.select--panel');
   const ctx = element;
+
+  subPanel.addEventListener('click', function (event) {
+    event.stopPropagation();
+  }); // disable sub-panel event propagation outside
 
   element.querySelectorAll('.select--panel__item').forEach((element, index) => {
     element.setAttribute('index-data', index + 1);
@@ -25,7 +119,6 @@ export function initSelect({ element }) {
   element.addEventListener('click', async function () {
     if (!this.className.includes('running')) {
       this.classList.add('running');
-      const subPanel = this.querySelector('.select--panel');
 
       if (this.className.includes('active')) {
         await addAnimation({ element: subPanel, animationName: 'fadeOutZoom', timeSet: 200 });
@@ -36,9 +129,8 @@ export function initSelect({ element }) {
         await addAnimation({ element: subPanel, animationName: 'fadeInZoom', timeSet: 200 });
         this.classList.add('active');
         document.body.addEventListener('click', outsideClick);
-        function outsideClick() {
-          console.log('click outside!'); // test
-          if (element.className.includes('active')) {
+        function outsideClick(event) {
+          if (!event.target.closest('.select--panel')) {
             document.body.removeEventListener('click', outsideClick);
             element.click();
           }
@@ -181,11 +273,77 @@ export async function appendFormLink({ element }) {
       <span class="material-symbols-outlined"> settings </span>
     </button>
   </div>
-  <!-- box option to clone -->
-  <div class="form-control__options"></div>
+  <div range="10" class="form-control__options">
+          <!-- component insert number -->
+          <div class="wrap--insert--number start">
+            <div class="insert--number">
+              <h3 class="insert--number__title">
+                Start chapter
+                <span class="insert--number__title--custom">? - ?</span>
+              </h3>
+            </div>
+            <div class="fill--number">
+              <div class="fill--number__reduce">
+                <span class="material-symbols-outlined"> remove </span>
+              </div>
+              <div class="fill--number__show">
+                <input class="fill--number__show--number" value="?" />
+              </div>
+              <div class="fill--number__increase">
+                <span class="material-symbols-outlined"> add </span>
+              </div>
+            </div>
+          </div>
+          <!-- component insert number -->
+          <div class="wrap--insert--number end">
+            <div class="insert--number">
+              <h3 class="insert--number__title">
+                End chapter
+                <span class="insert--number__title--custom">? - ?</span>
+              </h3>
+            </div>
+            <div class="fill--number">
+              <div class="fill--number__reduce">
+                <span class="material-symbols-outlined"> remove </span>
+              </div>
+              <div class="fill--number__show">
+                <input class="fill--number__show--number" value="?" />
+              </div>
+              <div class="fill--number__increase">
+                <span class="material-symbols-outlined"> add </span>
+              </div>
+            </div>
+          </div>
+          <!-- component select output clone -->
+          <div class="wrap--select--output">
+            <div class="select--output">
+              <h3 class="select--output__title">Type output</h3>
+            </div>
+            <!-- component select output clone -->
+            <div class="select">
+              <div class="select--show">
+                <span class="select--show__content"></span>
+                <div class="select--show__icon">
+                  <svg data-v-e3e1e202="" aria-hidden="true" focusable="false" data-prefix="fas"
+                    data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                    class="icon svg-inline--fa fa-chevron-down fa-w-14 fa-fw">
+                    <path data-v-e3e1e202="" fill="currentColor"
+                      d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"
+                      class=""></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="select--panel">
+                <div class="select--panel__item" selected data-set="directory">Directory</div>
+                <div class="select--panel__item" data-set="pdf">PDF</div>
+              </div>
+            </div>
+          </div>
+        </div>
   `;
   element.insertBefore(mission, element.lastElementChild);
   await addAnimation({ element: mission, animationName: 'fadeInZoom', timeSet: 400, hasDisplay: false });
+  removeAnimation({ element: mission, justAnimation: true });
 
   return Promise.resolve(mission);
 }

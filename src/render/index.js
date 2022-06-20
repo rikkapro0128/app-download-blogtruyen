@@ -8,8 +8,10 @@ import {
   closeSetting,
   addAnimation,
   addStyleSmooth,
+  initRangeClone,
   appendFormLink,
   removeAnimation,
+  initAddressForm,
   toggleClassBindElement,
   addEventClearContentInput,
 } from './utils';
@@ -56,6 +58,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   const eleControlStop = document.querySelector('.control--download__stop');
   // const eleBtnDownload = document.getElementById('btn--download');
 
+  // AREA ELEMENT CONTROL DOWNLOAD
+
+  const formDefault = document.querySelector('.form-control');
+
   eleBtnAddlink.addEventListener('click', async function (event) {
     if (!this.className.includes('running')) {
       this.classList.add('running'); // toggle flag
@@ -67,12 +73,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       parent.style.height = `${value}px`;
 
       const nodeAfterAppend = await appendFormLink({ element: this.parentNode });
+      initAddressForm({ elementForm: nodeAfterAppend });
+      initSelect({ element: nodeAfterAppend.querySelector('.select') });
+      initRangeClone({ formOptions: nodeAfterAppend.querySelector('.form-control__options') });
       nodeAfterAppend.style.height = nodeAfterAppend.querySelector('.form-control__wrap--top').offsetHeight + 'px';
       addEventClearContentInput({
         elementLink: nodeAfterAppend.querySelector('.link--image'),
         elementClear: nodeAfterAppend.querySelector('.form-control__wrap--top__input--clear'),
       });
-
       addAnimation({ element: this, animationName: 'fadeIn', timeSet: 200 });
       nodeAfterAppend
         .querySelector('.form-control__wrap--top__clear-fill')
@@ -223,7 +231,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   // deflaut run this code below when content load
   event(); // init many event when main process sending
   tooltipInit(); // options for every tooltip setting
-  initSelect({ element: document.querySelector('.select') });
   document
     .querySelector('.form-control.default .form-control__wrap--top__setting')
     .addEventListener('click', async function () {
@@ -236,6 +243,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
 
-  document.querySelector('.form-control').style.height =
-    document.querySelector('.form-control__wrap--top').offsetHeight + 'px';
+  formDefault.style.height = document.querySelector('.form-control__wrap--top').offsetHeight + 'px';
+  initAddressForm({ elementForm: formDefault });
+  initSelect({ element: formDefault.querySelector('.select') });
+  initRangeClone({ formOptions: formDefault.querySelector('.form-control__options') });
 });
