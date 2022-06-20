@@ -1,8 +1,9 @@
-import { tooltipInit } from './tooltip';
 import toast from './toasts/web';
 // import toast from './toasts/win';
+import { tooltipInit } from './tooltip';
 import event, { miruSend } from './event';
 import {
+  initSelect,
   openSetting,
   closeSetting,
   addAnimation,
@@ -206,6 +207,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   eleNodeSetting.addEventListener('click', async function () {
     await addAnimation({ element: eleNodeSetting, animationName: 'hideDeep', timeSet: 200 });
     await addAnimation({ element: eleMenuSetting, animationName: 'fadeInVeriticalToTop', timeSet: 200 });
+    // removeAnimation({ element: eleMenuSetting });
   });
 
   eleExitMenuSetting.addEventListener('click', async function (event) {
@@ -213,12 +215,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     await addAnimation({ element: eleMenuSetting, animationName: 'fadeOutVeriticalToTop', timeSet: 200 }).then(
       (element) => (element.style.display = 'none'),
     );
+    // removeAnimation({ element: eleMenuSetting });
     await addAnimation({ element: eleNodeSetting, animationName: 'outstanding', timeSet: 200 });
+    // removeAnimation({ element: eleNodeSetting });
   });
 
   // deflaut run this code below when content load
   event(); // init many event when main process sending
   tooltipInit(); // options for every tooltip setting
+  initSelect({ element: document.querySelector('.select') });
   document
     .querySelector('.form-control.default .form-control__wrap--top__setting')
     .addEventListener('click', async function () {
@@ -227,7 +232,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   addEventClearContentInput({ elementLink: eleLink, elementClear: eleClearInput }); // add event element clear content input for (link-input)
   // deflaut animation run below when content load
   await addAnimation({ element: eleInteract, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+  removeAnimation({ element: eleInteract, justAnimation: true });
+
   await addAnimation({ element: eleWelcome, animationName: 'fadeInVeriticalToTop', timeSet: 400 });
+
   document.querySelector('.form-control').style.height =
     document.querySelector('.form-control__wrap--top').offsetHeight + 'px';
 });

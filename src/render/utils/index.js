@@ -1,3 +1,55 @@
+export function initSelect({ element }) {
+  const eleContentSelected = element.querySelector('.select--show__content');
+  const ctx = element;
+
+  element.querySelectorAll('.select--panel__item').forEach((element, index) => {
+    element.setAttribute('index-data', index + 1);
+
+    if (element.getAttribute('selected') === '') {
+      ctx.setAttribute('select-index', index + 1);
+      eleContentSelected.innerText = element.textContent;
+    }
+
+    element.addEventListener('click', function () {
+      const value = this.textContent;
+      const selectedIndex = ctx.getAttribute('select-index');
+      if (eleContentSelected.textContent !== value) {
+        eleContentSelected.innerText = value;
+        ctx.querySelector(`.select--panel__item[index-data='${selectedIndex}']`).removeAttribute('selected');
+        ctx.setAttribute('select-index', this.getAttribute('index-data'));
+        this.setAttribute('selected', '');
+      }
+    });
+  });
+
+  element.addEventListener('click', async function () {
+    if (!this.className.includes('running')) {
+      this.classList.add('running');
+      const subPanel = this.querySelector('.select--panel');
+
+      if (this.className.includes('active')) {
+        await addAnimation({ element: subPanel, animationName: 'fadeOutZoom', timeSet: 200 });
+        removeAnimation({ element: subPanel });
+        subPanel.style.display = 'none';
+        this.classList.remove('active');
+      } else {
+        await addAnimation({ element: subPanel, animationName: 'fadeInZoom', timeSet: 200 });
+        this.classList.add('active');
+        document.body.addEventListener('click', outsideClick);
+        function outsideClick() {
+          console.log('click outside!'); // test
+          if (element.className.includes('active')) {
+            document.body.removeEventListener('click', outsideClick);
+            element.click();
+          }
+        }
+      }
+
+      this.classList.remove('running');
+    }
+  });
+}
+
 export function createElementTask({ taskName = 'No task name', isFirst }) {
   const nodeMain = document.createElement('div');
   nodeMain.classList.add('tasks--complete__wrap');
@@ -173,6 +225,7 @@ export async function openSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) 
   parent.style.height = `${eleBtnSetting.offsetHeight + heightOption}px`;
   eleInteractive.style.height = `${eleInteractive.offsetHeight + heightOption}px`;
   await addAnimation({ element: eleOptions, animationName: 'fadeInZoom', timeSet: 200 });
+  removeAnimation({ element: eleOptions, justAnimation: true });
 }
 
 export async function closeSetting({ eleBtnSetting, margin = 0, timeSet = 200 }) {
@@ -183,7 +236,7 @@ export async function closeSetting({ eleBtnSetting, margin = 0, timeSet = 200 })
   parent.style.height = `${eleBtnSetting.offsetHeight}px`;
   eleInteractive.style.height = `${eleInteractive.offsetHeight - heightOption}px`;
   await addAnimation({
-    element: eleBtnSetting.closest('.form-control').querySelector('.form-control__options'),
+    element: eleOptions,
     animationName: 'fadeOutZoom',
     timeSet: 200,
   });
