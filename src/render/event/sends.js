@@ -1,9 +1,16 @@
 class send {
-  linkToIPC(url) {
+  analysisLinkMangas({ info }) {
     /*
       send link to IPC (main process)
     */
-    window.electronAPI.sendLinkManga(url);
+    window.electronAPI.analysisLinkMangas({ info });
+  }
+
+  downloadLinkMangas({ links }) {
+    /*
+      send link to IPC (main process)
+    */
+    window.electronAPI.downloadLinkMangas({ links });
   }
 }
 

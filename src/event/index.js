@@ -6,7 +6,8 @@ function listEvent(mainWindow) {
   /*
     register event to handle
   */
-  ipcMain.on('miru:link', handleEvent.linkManga);
+  ipcMain.on('miru:analysis-link-mangas', handleEvent.analysisLinkManga);
+  ipcMain.on('miru:donwload-link-mangas', handleEvent.downloadLinkManga);
   ipcMain.on('miru:start-clone', ({ linkManga }) => {
     handleEvent.startClone({ mainWindow, linkManga });
   });

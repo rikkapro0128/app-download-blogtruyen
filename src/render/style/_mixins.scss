@@ -29,6 +29,10 @@
     background: $--color-blue;
     color: $--color-white;
   }
+  &--green {
+    background: $--color-green;
+    color: $--color-white;
+  }
   &:hover {
     opacity: 0.9;
   }

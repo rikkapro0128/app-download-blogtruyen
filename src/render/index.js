@@ -12,13 +12,16 @@ import {
   appendFormLink,
   removeAnimation,
   initAddressForm,
+  analysisMangaList,
   toggleClassBindElement,
   addEventClearContentInput,
 } from './utils';
 
 document.addEventListener('DOMContentLoaded', async function () {
   // AREA ELEMENT ADD MORE LINK
+  const eleBtnAnalysis = document.querySelector('.analysis--manga');
 
+  // AREA ELEMENT ADD MORE LINK
   const eleBtnAddlink = document.querySelector('.form--add');
 
   // AREA ELEMENT INTERACT BODY CONTENT
@@ -56,11 +59,16 @@ document.addEventListener('DOMContentLoaded', async function () {
   // AREA ELEMENT CONTROL DOWNLOAD
   const eleControlPause = document.querySelector('.control--download__pause');
   const eleControlStop = document.querySelector('.control--download__stop');
-  // const eleBtnDownload = document.getElementById('btn--download');
 
   // AREA ELEMENT CONTROL DOWNLOAD
+  // const eleBtnDownload = document.getElementById('btn--download');
 
+  // AREA ELEMENT FORM DEFAULT
   const formDefault = document.querySelector('.form-control');
+
+  eleBtnAnalysis.addEventListener('click', function () {
+    analysisMangaList({ elements: document.querySelectorAll('.form-control') });
+  });
 
   eleBtnAddlink.addEventListener('click', async function (event) {
     if (!this.className.includes('running')) {
@@ -69,10 +77,10 @@ document.addEventListener('DOMContentLoaded', async function () {
       addAnimation({ element: this, animationName: 'fadeOut', timeSet: 0 });
       // block set width to smooth animation
       const parent = this.parentNode;
-      const value = parent.offsetHeight + 48;
+      const value = parent.offsetHeight + 50;
       parent.style.height = `${value}px`;
 
-      const nodeAfterAppend = await appendFormLink({ element: this.parentNode });
+      const nodeAfterAppend = await appendFormLink({ element: parent });
       initAddressForm({ elementForm: nodeAfterAppend });
       initSelect({ element: nodeAfterAppend.querySelector('.select') });
       initRangeClone({ formOptions: nodeAfterAppend.querySelector('.form-control__options') });

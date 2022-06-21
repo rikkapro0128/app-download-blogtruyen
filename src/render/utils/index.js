@@ -1,4 +1,36 @@
 import toast from '../toasts/web';
+import send from '../event/sends.js';
+
+export function analysisMangaList({ elements }) {
+  let permitSend = true;
+  let temp = new Array();
+
+  for (const element of elements) {
+    const linkManga = element.querySelector('input.link--image').value;
+
+    if (/http[s]?:\/\/blogtruyen.vn/g.test(linkManga)) {
+      if (element.className.includes('error')) {
+        element.classList.remove('error');
+      }
+
+      element.classList.add('valid');
+      temp.push({
+        linkManga,
+        addressForm: element.getAttribute('form-addresss'),
+      });
+    } else {
+      if (element.className.includes('valid')) {
+        element.classList.remove('valid');
+      }
+      element.classList.add('error');
+      permitSend = false;
+    }
+  }
+
+  if (permitSend) {
+    send.analysisLinkMangas({ info: temp });
+  }
+}
 
 export function initRangeClone({ formOptions }) {
   // element button

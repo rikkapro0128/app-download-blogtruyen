@@ -425,6 +425,26 @@ a {
     }
     .form-control {
       transition: height 200ms ease-in-out;
+      &.done {
+        .link--image {
+          border-color: $--color-green;
+        }
+      }
+      &.error {
+        .link--image {
+          border-color: $--color-red;
+        }
+      }
+      &.warning {
+        .link--image {
+          border-color: $--color-yellow;
+        }
+      }
+      &.valid {
+        .link--image {
+          border-color: $--color-blue;
+        }
+      }
       &__wrap--top {
         display: flex;
         margin-top: 1rem;
@@ -442,6 +462,8 @@ a {
             letter-spacing: 0.03rem;
             padding: 11px 16px;
             color: $--color-gray-700;
+            transition: border-color 200ms ease-in-out;
+            border: 1px solid transparent;
             &::selection {
               color: $--color-white;
               background-color: $--color-blue;

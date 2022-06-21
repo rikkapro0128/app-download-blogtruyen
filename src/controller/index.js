@@ -10,9 +10,13 @@ class handleEvent {
     handle event when match
   */
 
-  linkManga(event, { url }) {
+  analysisLinkManga(event, { info }) {
+    console.log(info);
+  }
+
+  downloadLinkManga(event, { links }) {
     // transfrom or validate before clone
-    ipcMain.emit('miru:start-clone', { linkManga: url });
+    ipcMain.emit('miru:start-clone', { linkManga: links });
   }
 
   async startClone({ linkManga, mainWindow }) {
