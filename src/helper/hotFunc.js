@@ -3,6 +3,36 @@ const fs = require('fs');
 const axios = require('axios');
 
 class miruHelp {
+  async analysisMangaLink({ info, browser, cb }) {
+    return new Promise(async (res, rej) => {
+      try {
+        const page = await browser.newPage();
+        await page.goto(info.linkManga);
+        await page.waitForSelector('.manga-detail');
+
+        cb(page); // callback
+
+        const chapters = await miruQuery.mix({
+          page,
+          method: '$$eval',
+          query: '#list-chapters > p > span.title > a',
+          cb(elements) {
+            elements = elements.reverse();
+            return elements.map((item, index) => {
+              return {
+                nameChapter: item.textContent,
+                linkChapter: 'https://blogtruyen.vn' + item.getAttribute('href'),
+              };
+            });
+          },
+        });
+        res({ linkManga: info.linkManga, addressForm: info.addressForm, chapters });
+      } catch (error) {
+        rej(error);
+      }
+    });
+  }
+
   async handleChapters({ chapters, browser, window }) {
     let status = false; // check and reload clone when a chapter exist error
 

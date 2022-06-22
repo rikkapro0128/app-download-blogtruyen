@@ -22,6 +22,10 @@ export default function () {
       eleWrap.scrollTop = eleWrap.scrollHeight;
     }
   });
+
+  window.electronAPI.resultAnalysisManga((event, { listMangaAnalysis }) => {
+    console.log(listMangaAnalysis);
+  });
 }
 
 export { miruSend };

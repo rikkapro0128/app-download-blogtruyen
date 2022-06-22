@@ -10,8 +10,53 @@ class handleEvent {
     handle event when match
   */
 
-  analysisLinkManga(event, { info }) {
-    console.log(info);
+  async analysisLinkManga({ info, mainWindow }) {
+    try {
+      // init new chrome process
+      const browser = await puppeteer.launch({
+        headless: true,
+        // headless: false,
+        args: ['--disable-software-rasterizer', '--disable-gpu'],
+      });
+
+      const maxTabOpen = 5;
+      let stackPage = new Array();
+      let stackInfo = new Array();
+      let stackResult = new Array();
+      const lengthInfo = info.length;
+
+      for (const [index, infoCtx] of info.entries()) {
+        if (stackInfo.length < maxTabOpen) {
+          const checkLast = index === lengthInfo - 1 ? true : false;
+          stackInfo.push(infoCtx);
+
+          if (stackInfo.length === maxTabOpen || checkLast) {
+            const stackTemp = new Array();
+            for (const stack of stackInfo) {
+              const resultAnalysis = miruHelp.analysisMangaLink({
+                info: stack,
+                browser,
+                cb(page) {
+                  stackPage.push(page);
+                },
+              });
+              stackTemp.push(resultAnalysis);
+            }
+            const result = await Promise.all(stackTemp);
+            stackResult = [...stackResult, ...result];
+            for (const page of stackPage) {
+              await page.close();
+            }
+            stackInfo = new Array();
+            stackPage = new Array();
+          }
+        }
+      }
+      await browser.close();
+      mainWindow.webContents.send('miru:result-analysis-manga-links', { listMangaAnalysis: stackResult });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   downloadLinkManga(event, { links }) {
