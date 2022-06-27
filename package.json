@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
     "electron": "^19.0.3",
+    "htmlparser2": "^8.0.1",
     "notyf": "^3.10.0",
     "puppeteer": "^14.3.0",
     "tippy.js": "^6.3.7"

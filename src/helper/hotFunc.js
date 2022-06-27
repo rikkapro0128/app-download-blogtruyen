@@ -110,7 +110,6 @@ class miruHelp {
 
   async downloadChapters({ chapters, pathManga, window, maxStream }) {
     const maxNumberStream = 2 || maxStream;
-    let infoAdressImage = new Array();
     let chunkLink = new Array();
     let stack = 0;
 
@@ -119,20 +118,17 @@ class miruHelp {
         for (let indexChapters = 0; indexChapters < chapters.length; indexChapters++) {
           // loop chapters
 
-          let listImageChapter = chapters[indexChapters].listImages;
+          let listImageChapter = chapters[indexChapters].images;
           let lenImageChapter = listImageChapter.length;
 
           let initPathChapter = `${pathManga}/${this.removeAccents(
-            chapters[indexChapters].nameChapter.split(' ').join('-'),
+            chapters[indexChapters].name.split(' ').join('-'),
           )}/`;
           fs.mkdirSync(initPathChapter, { recursive: true });
-
-          // console.log(initPathChapter);
 
           for (let indexImage = 0; indexImage < lenImageChapter; indexImage++) {
             // loop image every chapter
             stack++;
-            // console.log('Download with stack => ' + stack + ' => ' + listImageChapter[indexImage]);
             chunkLink.push(listImageChapter[indexImage]); // push list images every chapter
             // just download by max stack or end of last index
             if (chunkLink.length === maxNumberStream || indexImage === lenImageChapter - 1) {
@@ -142,18 +138,12 @@ class miruHelp {
               });
 
               const infoImages = await Promise.allSettled(checkList);
-              infoAdressImage.push(...infoImages);
+              // infoAdressImage.push(...infoImages);
               // console.log('<=< Finish stack! >=>');
               chunkLink = new Array();
               stack = 0;
             }
           }
-          chapters[indexChapters].infoListImage = infoAdressImage;
-          infoAdressImage = new Array();
-          window.webContents.send('miru:update-task', {
-            name: `Download done list image ${chapters[indexChapters].nameChapter}`,
-            type: 'increasePercent',
-          });
         }
         res(chapters);
       } catch (error) {
@@ -169,6 +159,28 @@ class miruHelp {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D')
       .replace(/[`?!*~,<>;':"\/\[\]\|{}()=_+]/g, '');
+  }
+
+  checkProtocol({ URLWebManga = '' }) {
+    if (URLWebManga !== '') {
+      return new RegExp('^https?', 'g').test(URLWebManga);
+    } else {
+      return new Error('URLWebManga not pass to funtion!');
+    }
+  }
+
+  completeDNS({ protocol = 'http', subdomain = '', domain = '', TLD = 'vn', urlPoint, slug = true }) {
+    return `${protocol}:${slug ? '//' : ''}${subdomain ? subdomain + '.' : ''}${domain ? domain + '.' : ''}${
+      domain ? TLD : ''
+    }${urlPoint}`;
+  }
+
+  formatDate(template = '', reverse) {
+    const tempDate = template.split(' ');
+    return {
+      date: reverse ? tempDate[1] : tempDate[0],
+      hour: reverse ? tempDate[0] : tempDate[1],
+    };
   }
 }
 
