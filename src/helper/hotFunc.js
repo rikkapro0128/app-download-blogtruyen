@@ -69,42 +69,47 @@ class miruHelp {
 
   async downloadFile({ url, pathByName }) {
     return new Promise((res, rej) => {
-      axios({
-        method: 'get',
-        url: url,
-        headers: {
-          referer: 'https://blogtruyen.vn/',
-        },
-        responseEncoding: 'base64',
-        responseType: 'stream',
-      })
-        .then(function (response) {
-          let typefile = response.headers['content-type'];
-          let namePathImage = pathByName + `.${typefile === 'image/jpeg' ? 'jpg' : typefile.split('/')[1]}`;
-          response.data.pipe(
-            fs
-              .createWriteStream(namePathImage, {
-                autoClose: true,
-                encoding: 'base64',
-              })
-              .on('error', (err) => {
-                rej(err);
-              })
-              .on('finish', () => {
-                // check size download is full-filled
-                let stats = fs.statSync(namePathImage);
-                res({
-                  namePathImage: namePathImage,
-                  typeImage: response.headers['content-type'],
-                  sizeImage: response.headers['content-length'],
-                  fileSize: stats.size,
-                });
-              }),
-          );
-        })
-        .catch((err) => {
-          rej(err);
-        });
+      let catchError = false;
+      do {
+        try {
+          axios({
+            method: 'get',
+            url: url,
+            headers: {
+              referer: 'https://blogtruyen.vn/',
+            },
+            responseEncoding: 'base64',
+            responseType: 'stream',
+          })
+            .then(function (response) {
+              let typefile = response.headers['content-type'];
+              let namePathImage = pathByName + `.${typefile === 'image/jpeg' ? 'jpg' : typefile.split('/')[1]}`;
+              response.data.pipe(
+                fs
+                  .createWriteStream(namePathImage, {
+                    autoClose: true,
+                    encoding: 'base64',
+                  })
+                  .on('finish', () => {
+                    // check size download is full-filled
+                    let stats = fs.statSync(namePathImage);
+                    res({
+                      namePathImage: namePathImage,
+                      typeImage: response.headers['content-type'],
+                      sizeImage: response.headers['content-length'],
+                      fileSize: stats.size,
+                    });
+                  }),
+              );
+              catchError = false;
+            })
+            .catch((err) => {
+              throw err;
+            });
+        } catch (error) {
+          catchError = true;
+        }
+      } while (catchError);
     });
   }
 

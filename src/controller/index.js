@@ -184,21 +184,27 @@ class handleEvent extends blogtruyen {
   }
 
   async analysisLinkManga({ info, mainWindow }) {
-    try {
-      info.forEach(async (element) => {
-        const res = await axios.get(element.linkManga);
-        if (res.status === 200) {
-          const dom = htmlparser2.parseDocument(res.data);
-          const $ = cheerio.load(dom);
-          let general = new Object();
-          general = await this.getGeneral({ $ });
-          await this.startClone({ manga: general, mainWindow });
-          mainWindow.webContents.send('miru:result-analysis-manga-links', { listMangaAnalysis: general });
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    info.forEach(async (element) => {
+      let catchError = false;
+      try {
+        do {
+          const res = await axios.get(element.linkManga);
+          if (res.status >= 200 && res.status < 300) {
+            const dom = htmlparser2.parseDocument(res.data);
+            const $ = cheerio.load(dom);
+            let general = new Object();
+            general = await this.getGeneral({ $ });
+            await this.startClone({ manga: general, mainWindow });
+            mainWindow.webContents.send('miru:result-analysis-manga-links', { listMangaAnalysis: general });
+            catchError = false;
+          }
+        } while (catchError);
+      } catch (error) {
+        catchError = true;
+        console.log(error);
+        console.log(error.prototype);
+      }
+    });
   }
 
   downloadLinkManga(event, { links }) {
