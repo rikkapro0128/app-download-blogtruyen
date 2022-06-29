@@ -1,7 +1,7 @@
 import toast from '../toasts/web';
 import send from '../event/sends.js';
 
-export function analysisMangaList({ elements }) {
+export function analysisMangaList({ elements, btn }) {
   let permitSend = true;
   let temp = new Array();
 
@@ -28,7 +28,7 @@ export function analysisMangaList({ elements }) {
   }
 
   if (permitSend) {
-    send.analysisLinkMangas({ info: temp });
+    send.analysisLinkMangas({ info: temp, btn });
   }
 }
 
@@ -313,7 +313,7 @@ export async function appendFormLink({ element }) {
       <span class="material-symbols-outlined"> remove </span>
     </button>
     <!-- button to open setting clone -->
-    <button class="form-control__wrap--top__setting btn btn--primary">
+    <button class="form-control__wrap--top__setting disable btn btn--primary">
       <span class="material-symbols-outlined"> settings </span>
     </button>
   </div>

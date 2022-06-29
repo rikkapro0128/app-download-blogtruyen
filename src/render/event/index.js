@@ -8,6 +8,8 @@ const eleFillPathSave = document.querySelector('.save--location__path--present >
 export default function () {
   // function register event send by main process
 
+  let storeAnalysis = new Array();
+
   window.electronAPI.savePathStorage((event, value) => {
     if (value.pathStorage !== localStorage.getItem('pathStorage')) {
       localStorage.setItem('pathStorageNew', value.pathStorage);
@@ -23,8 +25,9 @@ export default function () {
     }
   });
 
-  window.electronAPI.resultAnalysisManga((event, { listMangaAnalysis }) => {
-    console.log(listMangaAnalysis);
+  window.electronAPI.resultAnalysisManga((event, { mangaResult }) => {
+    storeAnalysis.push(mangaResult);
+    console.log(storeAnalysis);
   });
 }
 

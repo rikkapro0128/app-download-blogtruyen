@@ -66,8 +66,24 @@ document.addEventListener('DOMContentLoaded', async function () {
   // AREA ELEMENT FORM DEFAULT
   const formDefault = document.querySelector('.form-control');
 
-  eleBtnAnalysis.addEventListener('click', function () {
-    analysisMangaList({ elements: document.querySelectorAll('.form-control') });
+  eleBtnAnalysis.addEventListener('click', async function () {
+    if (!this.className.includes('active')) {
+      this.classList.add('active');
+      if (this.className.includes('analysis--manga')) {
+        analysisMangaList({ elements: document.querySelectorAll('.form-control'), btn: this });
+        await addAnimation({ element: this, animationName: 'zoomInSideTop', timeSet: 400 });
+        this.innerText = 'download all';
+        await addAnimation({ element: this, animationName: 'zoomOutSideBottom', timeSet: 400 });
+        this.classList.remove('analysis--manga');
+        this.classList.add('downloads--manga', 'disable');
+      } else if (this.className.includes('downloads--manga')) {
+        if (this.className.includes('disable')) {
+          toast.error('You must wait analysis done!');
+        }
+      }
+      removeAnimation({ element: this });
+      this.classList.remove('active');
+    }
   });
 
   eleBtnAddlink.addEventListener('click', async function (event) {
@@ -117,7 +133,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
       nodeAfterAppend.querySelector('.form-control__wrap--top__setting').addEventListener('click', function (event) {
-        toggleClassBindElement({ element: event.target, cbActive: openSetting, cbNoActive: closeSetting });
+        if (!this.className.includes('disable')) {
+          toggleClassBindElement({ element: event.target, cbActive: openSetting, cbNoActive: closeSetting });
+        }
       });
 
       this.classList.remove('running'); // toggle flag
@@ -242,7 +260,9 @@ document.addEventListener('DOMContentLoaded', async function () {
   document
     .querySelector('.form-control.default .form-control__wrap--top__setting')
     .addEventListener('click', async function () {
-      await toggleClassBindElement({ element: this, cbActive: openSetting, cbNoActive: closeSetting });
+      if (!this.className.includes('disable')) {
+        await toggleClassBindElement({ element: this, cbActive: openSetting, cbNoActive: closeSetting });
+      }
     });
   addEventClearContentInput({ elementLink: eleLink, elementClear: eleClearInput }); // add event element clear content input for (link-input)
   // deflaut animation run below when content load

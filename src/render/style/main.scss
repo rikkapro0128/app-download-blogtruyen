@@ -54,11 +54,14 @@ a {
   // height: 100vh;
   width: 100%;
   padding: 1rem 2rem;
-  .analysis--manga {
+  .func--btn {
     margin-top: 1rem;
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
+    &.disable {
+      cursor: not-allowed;
+    }
   }
   .popup--setting {
     position: fixed;
@@ -498,6 +501,9 @@ a {
           }
         }
         &__setting {
+          &.disable {
+            cursor: not-allowed;
+          }
           span {
             transition: transform 200ms ease-in-out, color 200ms ease-in-out;
           }

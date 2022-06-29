@@ -194,8 +194,10 @@ class handleEvent extends blogtruyen {
             const $ = cheerio.load(dom);
             let general = new Object();
             general = await this.getGeneral({ $ });
-            await this.startClone({ manga: general, mainWindow });
-            mainWindow.webContents.send('miru:result-analysis-manga-links', { listMangaAnalysis: general });
+            // await this.startClone({ manga: general, mainWindow });
+            mainWindow.webContents.send('miru:result-analysis-manga-links', {
+              mangaResult: { ...general, ...element },
+            });
             catchError = false;
           }
         } while (catchError);
