@@ -1,7 +1,8 @@
 import toast from './toasts/web';
 // import toast from './toasts/win';
 import { tooltipInit } from './tooltip';
-import event, { miruSend } from './event';
+import event, { miruSend } from './event/index.js';
+import send from './event/sends.js';
 import {
   initSelect,
   openSetting,
@@ -69,19 +70,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   eleBtnAnalysis.addEventListener('click', async function () {
     if (!this.className.includes('active')) {
       this.classList.add('active');
-      if (this.className.includes('analysis--manga')) {
-        analysisMangaList({ elements: document.querySelectorAll('.form-control'), btn: this });
-        await addAnimation({ element: this, animationName: 'zoomInSideTop', timeSet: 400 });
-        this.innerText = 'download all';
-        await addAnimation({ element: this, animationName: 'zoomOutSideBottom', timeSet: 400 });
-        this.classList.remove('analysis--manga');
-        this.classList.add('downloads--manga', 'disable');
-      } else if (this.className.includes('downloads--manga')) {
-        if (this.className.includes('disable')) {
-          toast.error('You must wait analysis done!');
-        }
-      }
-      removeAnimation({ element: this });
+      await analysisMangaList({ elements: document.querySelectorAll('.form-control'), btn: this });
       this.classList.remove('active');
     }
   });
@@ -89,6 +78,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   eleBtnAddlink.addEventListener('click', async function (event) {
     if (!this.className.includes('running')) {
       this.classList.add('running'); // toggle flag
+
       const btnCheckIsDownload = document.querySelector('.btn.func--btn');
       if (btnCheckIsDownload.className.includes('downloads--manga')) {
         btnCheckIsDownload.classList.remove('downloads--manga', 'disable');
@@ -121,6 +111,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             const getHeightFormControl = this.closest('.form-control').offsetHeight + 10;
             const eleOptions = nodeAfterAppend.querySelector('.form-control__options');
             const value = eleParent.offsetHeight - getHeightFormControl;
+            send.clearThisMangaByAddress({
+              address: nodeAfterAppend.getAttribute('form-addresss'),
+              type: 'NODE_CHANGE',
+            });
             removeAnimation({ element: eleOptions });
             eleOptions.style.display = 'none';
             await addAnimation({

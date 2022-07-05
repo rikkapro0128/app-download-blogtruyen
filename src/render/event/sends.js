@@ -12,11 +12,11 @@ class send {
     */
     window.electronAPI.downloadLinkMangas({ links });
   }
-  clearThisMangaByAddress({ address }) {
+  clearThisMangaByAddress(props) {
     /*
       send link to IPC (main process)
     */
-    window.clearThisMangaByAddress({ address });
+    window.clearThisMangaByAddress(props);
   }
 }
 

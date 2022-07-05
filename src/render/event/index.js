@@ -48,8 +48,8 @@ export default function () {
     storeAnalysis = []; // clear store
   });
 
-  window.clearThisMangaByAddress = function ({ address }) {
-    console.log(address);
+  window.clearThisMangaByAddress = function ({ address, type }) {
+    console.log({ address, type });
   };
 }
 

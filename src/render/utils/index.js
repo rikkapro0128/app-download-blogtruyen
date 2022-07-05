@@ -1,9 +1,10 @@
 import toast from '../toasts/web';
 import send from '../event/sends.js';
 
-export function analysisMangaList({ elements, btn }) {
+export async function analysisMangaList({ elements, btn }) {
   let permitSend = true;
   let temp = new Array();
+  let countError = 0;
 
   for (const element of elements) {
     if (!element.className.includes('valid')) {
@@ -24,6 +25,7 @@ export function analysisMangaList({ elements, btn }) {
           element.classList.remove('valid');
         }
         element.classList.add('error');
+        countError += 1;
         permitSend = false;
       }
     }
@@ -31,6 +33,20 @@ export function analysisMangaList({ elements, btn }) {
 
   if (permitSend) {
     send.analysisLinkMangas({ info: temp, btn });
+    await addAnimation({ element: btn, animationName: 'zoomInSideTop', timeSet: 400 });
+    btn.innerText = 'download all';
+    await addAnimation({ element: btn, animationName: 'zoomOutSideBottom', timeSet: 400 });
+    btn.classList.remove('analysis--manga');
+    btn.classList.add('downloads--manga', 'disable');
+    removeAnimation({ element: btn });
+  } else {
+    toast.error(`${countError} form link is invalid`);
+    const btnCheckIsDownload = document.querySelector('.btn.func--btn');
+    if (btnCheckIsDownload.className.includes('downloads--manga')) {
+      btnCheckIsDownload.classList.remove('downloads--manga', 'disable');
+      btnCheckIsDownload.classList.add('analysis--manga');
+      btnCheckIsDownload.innerText = 'analysis manga';
+    }
   }
 }
 
@@ -273,8 +289,12 @@ export function removeAnimation({ element, justAnimation = false }) {
 }
 
 export function addEventClearContentInput({ elementLink, elementClear }) {
+  let modified = false;
+
   elementClear.addEventListener('click', function () {
     elementLink.value = '';
+    modified = true;
+    elementLink.focus();
   });
 
   elementLink.addEventListener('focusin', function () {
@@ -285,15 +305,24 @@ export function addEventClearContentInput({ elementLink, elementClear }) {
 
   elementLink.addEventListener('input', function () {
     const val = this.value;
-    send.clearThisMangaByAddress({ address: elementLink.closest('.form-control').getAttribute('form-addresss') });
+    if (elementClear.className.includes('disable') && val) elementClear.classList.remove('disable');
     if (val && !elementClear.className.includes('active')) {
       elementClear.classList.add('active');
     } else if (!val) {
       elementClear.classList.remove('active');
     }
+    modified = true;
   });
 
   elementLink.addEventListener('focusout', function () {
+    const val = this.value;
+    if (val && modified) {
+      send.clearThisMangaByAddress({
+        address: elementLink.closest('.form-control').getAttribute('form-addresss'),
+        type: 'INPUT_CHANGE',
+      });
+      modified = false;
+    }
     if (elementClear.className.includes('active')) {
       elementClear.classList.remove('active');
     }
