@@ -15,6 +15,12 @@
     color: inherit;
     font-size: inherit;
   }
+  &.downloads--manga {
+    opacity: 0.4;
+  }
+  &.opening {
+    border: 1px solid $--color-blue;
+  }
   &--primary {
     &:hover {
       color: $--color-blue;

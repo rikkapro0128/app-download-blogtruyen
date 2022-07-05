@@ -12,6 +12,12 @@ class send {
     */
     window.electronAPI.downloadLinkMangas({ links });
   }
+  clearThisMangaByAddress({ address }) {
+    /*
+      send link to IPC (main process)
+    */
+    window.clearThisMangaByAddress({ address });
+  }
 }
 
 export default new send();

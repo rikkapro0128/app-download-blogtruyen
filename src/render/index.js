@@ -89,7 +89,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   eleBtnAddlink.addEventListener('click', async function (event) {
     if (!this.className.includes('running')) {
       this.classList.add('running'); // toggle flag
-
+      const btnCheckIsDownload = document.querySelector('.btn.func--btn');
+      if (btnCheckIsDownload.className.includes('downloads--manga')) {
+        btnCheckIsDownload.classList.remove('downloads--manga', 'disable');
+        btnCheckIsDownload.classList.add('analysis--manga');
+        btnCheckIsDownload.innerText = 'analysis manga';
+      }
       addAnimation({ element: this, animationName: 'fadeOut', timeSet: 0 });
       // block set width to smooth animation
       const parent = this.parentNode;

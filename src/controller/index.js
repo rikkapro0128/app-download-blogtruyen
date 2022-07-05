@@ -184,6 +184,8 @@ class handleEvent extends blogtruyen {
   }
 
   async analysisLinkManga({ info, mainWindow }) {
+    let tempCountDoned = info.length;
+    // mainWindow.webContents.send('miru:init-store-result-analysis-manga-links', null);
     info.forEach(async (element) => {
       let catchError = false;
       try {
@@ -199,6 +201,10 @@ class handleEvent extends blogtruyen {
               mangaResult: { ...general, ...element },
             });
             catchError = false;
+            tempCountDoned--;
+            if (tempCountDoned === 0) {
+              mainWindow.webContents.send('miru:done-result-analysis-manga-links', null);
+            }
           }
         } while (catchError);
       } catch (error) {

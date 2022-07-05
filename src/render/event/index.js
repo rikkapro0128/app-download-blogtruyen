@@ -27,8 +27,30 @@ export default function () {
 
   window.electronAPI.resultAnalysisManga((event, { mangaResult }) => {
     storeAnalysis.push(mangaResult);
-    console.log(storeAnalysis);
   });
+
+  window.electronAPI.doneAnalysisManga((event) => {
+    console.log(storeAnalysis);
+    storeAnalysis.forEach((value, index) => {
+      const eleBtn = document.querySelector(
+        `.form-control[form-addresss="${value.addressForm}"] .form-control__wrap--top__setting`,
+      );
+      if (eleBtn) {
+        eleBtn.classList.remove('disable');
+        eleBtn.classList.add('opening');
+      } else {
+        storeAnalysis.splice(index, 1);
+      }
+    });
+  });
+
+  window.electronAPI.initStoreAnalysisManga((event) => {
+    storeAnalysis = []; // clear store
+  });
+
+  window.clearThisMangaByAddress = function ({ address }) {
+    console.log(address);
+  };
 }
 
 export { miruSend };

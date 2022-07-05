@@ -12,4 +12,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   appendTask: (callback) => ipcRenderer.on('miru:update-task', callback),
   savePathStorage: (callback) => ipcRenderer.on('miru:save--path-storage', callback),
   resultAnalysisManga: (callback) => ipcRenderer.on('miru:result-analysis-manga-links', callback),
+  doneAnalysisManga: (callback) => ipcRenderer.on('miru:done-result-analysis-manga-links', callback),
+  initStoreAnalysisManga: (callback) => ipcRenderer.on('miru:init-store-result-analysis-manga-links', callback),
 });

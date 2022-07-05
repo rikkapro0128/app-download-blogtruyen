@@ -6,24 +6,26 @@ export function analysisMangaList({ elements, btn }) {
   let temp = new Array();
 
   for (const element of elements) {
-    const linkManga = element.querySelector('input.link--image').value;
+    if (!element.className.includes('valid')) {
+      const linkManga = element.querySelector('input.link--image').value;
 
-    if (/http[s]?:\/\/blogtruyen.vn/g.test(linkManga)) {
-      if (element.className.includes('error')) {
-        element.classList.remove('error');
-      }
+      if (/http[s]?:\/\/blogtruyen.vn/g.test(linkManga)) {
+        if (element.className.includes('error')) {
+          element.classList.remove('error');
+        }
 
-      element.classList.add('valid');
-      temp.push({
-        linkManga,
-        addressForm: element.getAttribute('form-addresss'),
-      });
-    } else {
-      if (element.className.includes('valid')) {
-        element.classList.remove('valid');
+        element.classList.add('valid');
+        temp.push({
+          linkManga,
+          addressForm: element.getAttribute('form-addresss'),
+        });
+      } else {
+        if (element.className.includes('valid')) {
+          element.classList.remove('valid');
+        }
+        element.classList.add('error');
+        permitSend = false;
       }
-      element.classList.add('error');
-      permitSend = false;
     }
   }
 
@@ -283,6 +285,7 @@ export function addEventClearContentInput({ elementLink, elementClear }) {
 
   elementLink.addEventListener('input', function () {
     const val = this.value;
+    send.clearThisMangaByAddress({ address: elementLink.closest('.form-control').getAttribute('form-addresss') });
     if (val && !elementClear.className.includes('active')) {
       elementClear.classList.add('active');
     } else if (!val) {
