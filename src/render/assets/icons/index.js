@@ -1,1 +1,0 @@
-import './blogtruyen-logo.ico';
