@@ -1,0 +1,45 @@
+// modifier for notyfy package
+
+.notyf__message {
+  font-size: 1.2rem;
+  color: $--color-white;
+}
+
+.notyf__icon {
+  span {
+    color: $--color-white !important;
+  }
+}
+
+.notyf__toast {
+  border-radius: 6px;
+  box-shadow: 0 14px 30px rgba(var(--color-shadow-dark), 0.1), 0 4px 4px rgba(var(--color-shadow-dark), 0.04);
+}
+
+.notyf__dismiss {
+  width: 30px;
+}
+
+// modifier for tippyjs package
+
+.tippy-box[data-theme~='miru'] {
+  background-color: $--color-blue;
+  color: $--color-white;
+  font-size: 1.7rem;
+  & * {
+    color: inherit;
+  }
+}
+
+.tippy-box[data-theme~='miru'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: $--color-blue;
+}
+.tippy-box[data-theme~='miru'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: $--color-blue;
+}
+.tippy-box[data-theme~='miru'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: $--color-blue;
+}
+.tippy-box[data-theme~='miru'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: $--color-blue;
+}
