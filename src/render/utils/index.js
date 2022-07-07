@@ -7,6 +7,9 @@ export async function analysisMangaList({ elements, btn }) {
   let countError = 0;
 
   for (const element of elements) {
+    if (element.className.includes('analysed')) {
+      continue;
+    }
     if (element.className.includes('valid')) {
       element.classList.remove('valid');
     }

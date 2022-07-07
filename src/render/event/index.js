@@ -27,6 +27,10 @@ export default function () {
 
   window.electronAPI.resultAnalysisManga((event, { mangaResult }) => {
     storeAnalysis.push(mangaResult);
+    // handle data repsonse from IPC main
+    const eleForm = document.querySelector(`.form-control[form-addresss="${mangaResult.addressForm}"]`);
+    eleForm.querySelector('.form-control__options').setAttribute('range', mangaResult.chapters.length);
+    eleForm.classList.add('analysed');
   });
 
   window.electronAPI.doneAnalysisManga((event) => {
@@ -49,6 +53,8 @@ export default function () {
   });
 
   window.clearThisMangaByAddress = function ({ address, type }) {
+    const eleForm = document.querySelector(`.form-control[form-addresss="${address}"]`);
+    eleForm.classList.remove('analysed');
     storeAnalysis = storeAnalysis.filter((value) => value.addressForm !== address);
     console.log('change', storeAnalysis);
   };

@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
       nodeAfterAppend.querySelector('.form-control__wrap--top__setting').addEventListener('click', function (event) {
-        if (!this.className.includes('disable')) {
+        if (this.closest('.form-control').className.includes('analysed')) {
           toggleClassBindElement({ element: event.target, cbActive: openSetting, cbNoActive: closeSetting });
         }
       });
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   document
     .querySelector('.form-control.default .form-control__wrap--top__setting')
     .addEventListener('click', async function () {
-      if (!this.className.includes('disable')) {
+      if (this.closest('.form-control').className.includes('analysed')) {
         await toggleClassBindElement({ element: this, cbActive: openSetting, cbNoActive: closeSetting });
       }
     });
