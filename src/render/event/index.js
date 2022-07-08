@@ -28,7 +28,7 @@ export default function () {
   window.electronAPI.resultAnalysisManga((event, { mangaResult }) => {
     storeAnalysis.push(mangaResult);
     // handle data repsonse from IPC main
-    const eleForm = document.querySelector(`.form-control[form-addresss="${mangaResult.addressForm}"]`);
+    const eleForm = document.querySelector(`.form-control[form-address="${mangaResult.addressForm}"]`);
     eleForm.querySelector('.form-control__options').setAttribute('range', mangaResult.chapters.length);
     eleForm.classList.add('analysed');
   });
@@ -37,7 +37,7 @@ export default function () {
     console.log('result', storeAnalysis);
     storeAnalysis.forEach((value, index) => {
       const eleBtn = document.querySelector(
-        `.form-control[form-addresss="${value.addressForm}"] .form-control__wrap--top__setting`,
+        `.form-control[form-address="${value.addressForm}"] .form-control__wrap--top__setting`,
       );
       if (eleBtn) {
         eleBtn.classList.remove('disable');
@@ -53,10 +53,14 @@ export default function () {
   });
 
   window.clearThisMangaByAddress = function ({ address, type }) {
-    const eleForm = document.querySelector(`.form-control[form-addresss="${address}"]`);
+    const eleForm = document.querySelector(`.form-control[form-address="${address}"]`);
     eleForm.classList.remove('analysed');
     storeAnalysis = storeAnalysis.filter((value) => value.addressForm !== address);
     console.log('change', storeAnalysis);
+  };
+
+  window.getInfoManga = function ({ address }) {
+    return storeAnalysis.find((value) => value.addressForm === address);
   };
 }
 

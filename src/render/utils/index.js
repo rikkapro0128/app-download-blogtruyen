@@ -23,7 +23,7 @@ export async function analysisMangaList({ elements, btn }) {
       element.classList.add('valid');
       temp.push({
         linkManga,
-        addressForm: element.getAttribute('form-addresss'),
+        addressForm: element.getAttribute('form-address'),
       });
     } else {
       if (element.className.includes('valid')) {
@@ -52,6 +52,51 @@ export async function analysisMangaList({ elements, btn }) {
       btnCheckIsDownload.innerText = 'analysis manga';
     }
   }
+}
+
+export async function addInfoToModal({ modal, address }) {
+  const infoManga = getInfoManga({ address });
+  if (infoManga) {
+    console.log(infoManga);
+    const name = modal.querySelector('.wrap--info__desc--name');
+    const timeUpdate = modal.querySelector('.wrap--info__desc--time.update > .data');
+    const timeCreate = modal.querySelector('.wrap--info__desc--time.create > .data');
+    const nameOther = modal.querySelectorAll('.wrap--info__desc--name-other > span');
+    const nameAuthor = modal.querySelectorAll('.wrap--info__desc--name-author > span');
+    const source = modal.querySelectorAll('.wrap--info__desc--source > span');
+    const teamTranslate = modal.querySelectorAll('.wrap--info__desc--team-translate > span');
+    const postBy = modal.querySelectorAll('.wrap--info__desc--post-info > span');
+    name.innerText = infoManga.name;
+    timeCreate.innerText = infoManga.create_date;
+    timeUpdate.innerText = infoManga.create_date;
+    infoManga.nameOther?.forEach((name) => {
+      nameOther[0].parentNode.innerHTML += `<span>${name}</span>`;
+    }) || (nameOther[0].parentNode.innerHTML += `<span>Updating...</span>`);
+    nameOther.forEach((ele) => ele.remove());
+  }
+  console.log(infoManga);
+}
+
+export function initModalInfo({ element, modal }) {
+  const btnViewDetail = element.querySelector('.wrap--info--details > button');
+  const btnCloseModal = modal.querySelector('.close--modal');
+  const addressForm = element.getAttribute('form-address');
+  btnViewDetail.addEventListener('click', async function () {
+    if (!this.className.includes('running')) {
+      this.classList.add('running');
+      await addInfoToModal({ modal, address: addressForm });
+      await addAnimation({ element: modal, animationName: 'fadeIn', hasDisplay: 200 });
+      this.classList.remove('running');
+    }
+  });
+  btnCloseModal.addEventListener('click', async function () {
+    if (!this.className.includes('running')) {
+      this.classList.add('running');
+      await addAnimation({ element: modal, animationName: 'fadeOut', hasDisplay: 200 });
+      removeAnimation({ element: modal });
+      this.classList.remove('running');
+    }
+  });
 }
 
 export function initRangeClone({ formOptions }) {
@@ -93,7 +138,9 @@ export function initRangeClone({ formOptions }) {
       const numberStartPresent = parseInt(eleStartValue.value);
       const numberEndPresent = parseInt(eleEndValue.value);
       if (isNaN(numberStartPresent) || isNaN(numberEndPresent)) {
-        toast.error('Value not number!');
+        if (eleStartValue.value !== '') {
+          toast.error('Value not number!');
+        }
         this.value = 0;
       } else if (!(numberStartPresent < numberEndPresent)) {
         toast.error('Start-clone must be less End-clone!');
@@ -105,8 +152,10 @@ export function initRangeClone({ formOptions }) {
       const numberStartPresent = parseInt(eleStartValue.value);
       const numberEndPresent = parseInt(eleEndValue.value);
       if (isNaN(numberStartPresent) || isNaN(numberEndPresent)) {
-        toast.error('Value not number!');
-        this.value = range;
+        if (eleEndValue.value !== '') {
+          toast.error('Value not number!');
+          this.value = 0;
+        }
       } else if (!(numberEndPresent > numberStartPresent)) {
         toast.error('End-clone must be bigger Start-clone!');
         this.value = range;
@@ -150,7 +199,7 @@ export function initRangeClone({ formOptions }) {
 
 export function initAddressForm({ elementForm }) {
   let timestamp = Math.round(Date.now() % 10000000);
-  elementForm.setAttribute('form-addresss', timestamp);
+  elementForm.setAttribute('form-address', timestamp);
 }
 
 export function initSelect({ element }) {
@@ -341,7 +390,7 @@ export function addEventClearContentInput({ elementLink, elementClear }) {
     const val = this.value;
     if (val && modified) {
       send.clearThisMangaByAddress({
-        address: elementLink.closest('.form-control').getAttribute('form-addresss'),
+        address: elementLink.closest('.form-control').getAttribute('form-address'),
         type: 'INPUT_CHANGE',
       });
       modified = false;
@@ -373,72 +422,83 @@ export async function appendFormLink({ element }) {
     </button>
   </div>
   <div range="10" class="form-control__options">
-          <!-- component insert number -->
-          <div class="wrap--insert--number start">
-            <div class="insert--number">
-              <h3 class="insert--number__title">
-                Start chapter
-                <span class="insert--number__title--custom">? - ?</span>
-              </h3>
-            </div>
-            <div class="fill--number">
-              <div class="fill--number__reduce">
-                <span class="material-symbols-outlined"> remove </span>
-              </div>
-              <div class="fill--number__show">
-                <input class="fill--number__show--number" value="?" />
-              </div>
-              <div class="fill--number__increase">
-                <span class="material-symbols-outlined"> add </span>
-              </div>
-            </div>
-          </div>
-          <!-- component insert number -->
-          <div class="wrap--insert--number end">
-            <div class="insert--number">
-              <h3 class="insert--number__title">
-                End chapter
-                <span class="insert--number__title--custom">? - ?</span>
-              </h3>
-            </div>
-            <div class="fill--number">
-              <div class="fill--number__reduce">
-                <span class="material-symbols-outlined"> remove </span>
-              </div>
-              <div class="fill--number__show">
-                <input class="fill--number__show--number" value="?" />
-              </div>
-              <div class="fill--number__increase">
-                <span class="material-symbols-outlined"> add </span>
-              </div>
-            </div>
-          </div>
-          <!-- component select output clone -->
-          <div class="wrap--select--output">
-            <div class="select--output">
-              <h3 class="select--output__title">Type output</h3>
-            </div>
-            <!-- component select output clone -->
-            <div class="select">
-              <div class="select--show">
-                <span class="select--show__content"></span>
-                <div class="select--show__icon">
-                  <svg data-v-e3e1e202="" aria-hidden="true" focusable="false" data-prefix="fas"
-                    data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                    class="icon svg-inline--fa fa-chevron-down fa-w-14 fa-fw">
-                    <path data-v-e3e1e202="" fill="currentColor"
-                      d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"
-                      class=""></path>
-                  </svg>
-                </div>
-              </div>
-              <div class="select--panel">
-                <div class="select--panel__item" selected data-set="directory">Directory</div>
-                <div class="select--panel__item" data-set="pdf">PDF</div>
-              </div>
-            </div>
+    <!-- component insert number -->
+    <div class="wrap--insert--number start">
+      <div class="insert--number">
+        <h3 class="insert--number__title">
+          Start chapter
+          <span class="insert--number__title--custom">? - ?</span>
+        </h3>
+      </div>
+      <div class="fill--number">
+        <div class="fill--number__reduce">
+          <span class="material-symbols-outlined"> remove </span>
+        </div>
+        <div class="fill--number__show">
+          <input class="fill--number__show--number" value="?" />
+        </div>
+        <div class="fill--number__increase">
+          <span class="material-symbols-outlined"> add </span>
+        </div>
+      </div>
+    </div>
+    <!-- component insert number -->
+    <div class="wrap--insert--number end">
+      <div class="insert--number">
+        <h3 class="insert--number__title">
+          End chapter
+          <span class="insert--number__title--custom">? - ?</span>
+        </h3>
+      </div>
+      <div class="fill--number">
+        <div class="fill--number__reduce">
+          <span class="material-symbols-outlined"> remove </span>
+        </div>
+        <div class="fill--number__show">
+          <input class="fill--number__show--number" value="?" />
+        </div>
+        <div class="fill--number__increase">
+          <span class="material-symbols-outlined"> add </span>
+        </div>
+      </div>
+    </div>
+    <!-- component select output clone -->
+    <div class="wrap--select--output">
+      <div class="select--output">
+        <h3 class="select--output__title">Type output</h3>
+      </div>
+      <!-- component select output clone -->
+      <div class="select">
+        <div class="select--show">
+          <span class="select--show__content"></span>
+          <div class="select--show__icon">
+            <svg data-v-e3e1e202="" aria-hidden="true" focusable="false" data-prefix="fas"
+              data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+              class="icon svg-inline--fa fa-chevron-down fa-w-14 fa-fw">
+              <path data-v-e3e1e202="" fill="currentColor"
+                d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"
+                class=""></path>
+            </svg>
           </div>
         </div>
+        <div class="select--panel">
+          <div class="select--panel__item" selected data-set="directory">Directory</div>
+          <div class="select--panel__item" data-set="pdf">PDF</div>
+        </div>
+      </div>
+    </div>
+    <!-- component view more information -->
+    <div class="wrap--info--details">
+      <h3 class="wrap--info--details__title">
+        View more
+      </h3>
+      <button class="btn btn--primary">
+        <span class="material-symbols-outlined">
+          more_horiz
+        </span>
+      </button>
+    </div>
+  </div>
   `;
   element.insertBefore(mission, element.lastElementChild);
   await addAnimation({ element: mission, animationName: 'fadeInZoom', timeSet: 400, hasDisplay: false });

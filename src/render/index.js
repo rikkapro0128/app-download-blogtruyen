@@ -8,6 +8,7 @@ import {
   openSetting,
   closeSetting,
   addAnimation,
+  initModalInfo,
   addStyleSmooth,
   initRangeClone,
   appendFormLink,
@@ -19,6 +20,9 @@ import {
 } from './utils';
 
 document.addEventListener('DOMContentLoaded', async function () {
+  // AREA ELEMENT ADD MORE LINK
+  const modalViewDetail = document.querySelector('.view--info.info--details');
+
   // AREA ELEMENT ADD MORE LINK
   const eleBtnAnalysis = document.querySelector('.analysis--manga');
 
@@ -112,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const eleOptions = nodeAfterAppend.querySelector('.form-control__options');
             const value = eleParent.offsetHeight - getHeightFormControl;
             send.clearThisMangaByAddress({
-              address: nodeAfterAppend.getAttribute('form-addresss'),
+              address: nodeAfterAppend.getAttribute('form-address'),
               type: 'NODE_CHANGE',
             });
             removeAnimation({ element: eleOptions });
@@ -273,5 +277,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   formDefault.style.height = document.querySelector('.form-control__wrap--top').offsetHeight + 'px';
   initAddressForm({ elementForm: formDefault });
   initSelect({ element: formDefault.querySelector('.select') });
+  initModalInfo({ element: formDefault, modal: modalViewDetail });
   initRangeClone({ formOptions: formDefault.querySelector('.form-control__options') });
 });
