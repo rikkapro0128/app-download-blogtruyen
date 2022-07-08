@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       const nodeAfterAppend = await appendFormLink({ element: parent });
       initAddressForm({ elementForm: nodeAfterAppend });
+      initModalInfo({ element: nodeAfterAppend, modal: modalViewDetail });
       initSelect({ element: nodeAfterAppend.querySelector('.select') });
       initRangeClone({ formOptions: nodeAfterAppend.querySelector('.form-control__options') });
       nodeAfterAppend.style.height = nodeAfterAppend.querySelector('.form-control__wrap--top').offsetHeight + 'px';

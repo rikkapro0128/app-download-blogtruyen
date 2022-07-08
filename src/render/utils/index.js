@@ -54,27 +54,91 @@ export async function analysisMangaList({ elements, btn }) {
   }
 }
 
-export async function addInfoToModal({ modal, address }) {
+export function addInfoToModal({ modal, address }) {
   const infoManga = getInfoManga({ address });
+  function templateRemoveAndAppendList({ parent, dataList }) {
+    parent.querySelectorAll('span') &&
+      parent.querySelectorAll('span').forEach((ele) => {
+        ele.remove();
+      }); // remove all name-other data
+    !dataList
+      ? (parent.innerHTML += `<span>UPDATING!</span>`)
+      : dataList.forEach((val, index) => {
+          parent.innerHTML += `<span>${val}</span>`; // update data mount to DOM
+        });
+  }
   if (infoManga) {
-    console.log(infoManga);
+    // element control
     const name = modal.querySelector('.wrap--info__desc--name');
+    const thumbnail = modal.querySelector('.wrap--info__thumbnail > img');
     const timeUpdate = modal.querySelector('.wrap--info__desc--time.update > .data');
     const timeCreate = modal.querySelector('.wrap--info__desc--time.create > .data');
-    const nameOther = modal.querySelectorAll('.wrap--info__desc--name-other > span');
-    const nameAuthor = modal.querySelectorAll('.wrap--info__desc--name-author > span');
-    const source = modal.querySelectorAll('.wrap--info__desc--source > span');
-    const teamTranslate = modal.querySelectorAll('.wrap--info__desc--team-translate > span');
-    const postBy = modal.querySelectorAll('.wrap--info__desc--post-info > span');
+    const nameOther = modal.querySelector('.wrap--info__desc--name-other');
+    const nameAuthor = modal.querySelector('.wrap--info__desc--name-author');
+    const source = modal.querySelector('.wrap--info__desc--source');
+    const teamTranslate = modal.querySelector('.wrap--info__desc--team-translate');
+    const genres = modal.querySelector('.wrap--info__desc--genres');
+    const postBy = modal.querySelector('.wrap--info__desc--post-info > span');
+    const postStatus = modal.querySelector('.wrap--info__desc--post-status > span');
+    const decription = modal.querySelector('.wrap--info__content > span');
+    // define const used for user
+    const imageTemp = new Image();
+    const loadingPath = { dest: 'assets/gifs/loading_01.gif', className: 'loading' };
+    const dataThumbnalIsLoaded = { link: undefined, className: 'data--image' };
+
+    // Set data below
     name.innerText = infoManga.name;
-    timeCreate.innerText = infoManga.create_date;
-    timeUpdate.innerText = infoManga.create_date;
-    infoManga.nameOther?.forEach((name) => {
-      nameOther[0].parentNode.innerHTML += `<span>${name}</span>`;
-    }) || (nameOther[0].parentNode.innerHTML += `<span>Updating...</span>`);
-    nameOther.forEach((ele) => ele.remove());
+
+    dataThumbnalIsLoaded.link = infoManga.thumbnail;
+    if (thumbnail.src !== dataThumbnalIsLoaded.link) {
+      imageTemp.onload = async function () {
+        // after image is loaded => do something!
+        thumbnail.classList.remove(`${loadingPath.className}`);
+        thumbnail.classList.add(`${dataThumbnalIsLoaded.className}`);
+        thumbnail.src = dataThumbnalIsLoaded.link;
+        await addAnimation({ element: thumbnail, animationName: 'fadeInVeriticalToTop', timeSet: 150 });
+      };
+      imageTemp.src = dataThumbnalIsLoaded.link;
+    }
+    if (infoManga.chapters.length === 1) {
+      const temp = `${infoManga.chapters.at(0).create.hour} - ${infoManga.chapters.at(0).create.date}`;
+      timeCreate.innerText = temp;
+      timeUpdate.innerText = temp;
+    } else if (infoManga.chapters.length > 1) {
+      timeCreate.innerText = `${infoManga.chapters.at(0).create.hour} - ${infoManga.chapters.at(0).create.date}`;
+      timeUpdate.innerText = `${infoManga.chapters.at(-1).create.hour} - ${infoManga.chapters.at(-1).create.date}`;
+    } else if (infoManga.chapters.length === 0) {
+      timeCreate.innerText = 'UPDATING!';
+      timeUpdate.innerText = 'UPDATING!';
+    }
+    postBy.innerText = infoManga.origin.postBy;
+    postStatus.innerText = infoManga.origin.status;
+    [
+      {
+        element: nameOther,
+        field: 'nameOther',
+      },
+      {
+        element: nameAuthor,
+        field: 'author',
+      },
+      {
+        element: source,
+        field: 'source',
+      },
+      {
+        element: teamTranslate,
+        field: 'teamTranslate',
+      },
+      {
+        element: genres,
+        field: 'genres',
+      },
+    ].forEach((domNeedUpdate) => {
+      templateRemoveAndAppendList({ parent: domNeedUpdate.element, dataList: infoManga[domNeedUpdate.field] });
+    });
+    decription.innerText = infoManga.desc;
   }
-  console.log(infoManga);
 }
 
 export function initModalInfo({ element, modal }) {
@@ -84,7 +148,7 @@ export function initModalInfo({ element, modal }) {
   btnViewDetail.addEventListener('click', async function () {
     if (!this.className.includes('running')) {
       this.classList.add('running');
-      await addInfoToModal({ modal, address: addressForm });
+      addInfoToModal({ modal, address: addressForm });
       await addAnimation({ element: modal, animationName: 'fadeIn', hasDisplay: 200 });
       this.classList.remove('running');
     }

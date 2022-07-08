@@ -707,10 +707,18 @@ a {
         }
       }
       &__desc {
-        max-width: 300px;
-        float: right;
+        max-width: 270px;
+        float: left;
+        margin-left: 2rem;
         &--name {
           font-size: 2rem;
+          width: 100%;
+          display: -webkit-box;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          max-height: 10rem;
         }
         &--time {
           font-size: 1.9rem;
@@ -722,6 +730,7 @@ a {
           }
         }
         &--template {
+          margin-top: 0.4rem;
           p {
             color: $--color-white;
             background: $--color-green;
@@ -756,7 +765,8 @@ a {
         &--genres {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(auto, 80px));
-          grid-gap: 0.2rem;
+          grid-gap: 0.3rem;
+          margin-top: 0.4rem;
           p {
             background: $--color-green;
           }
@@ -777,14 +787,16 @@ a {
         position: relative;
         top: 1rem;
         clear: both;
-        color: $--color-white;
         background: $--color-blue;
         padding: 1rem;
-        font-size: 1.5rem;
         border-radius: 4px;
         max-height: 400px;
         overflow-y: scroll;
         box-shadow: 0 14px 30px rgba($--color-shadow-blue, 0.1), 0 4px 4px rgba($--color-shadow-blue, 0.04);
+        span {
+          color: $--color-white;
+          font-size: 1.5rem;
+        }
       }
     }
   }
