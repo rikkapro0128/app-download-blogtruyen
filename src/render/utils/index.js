@@ -81,6 +81,7 @@ export function addInfoToModal({ modal, address }) {
     const postBy = modal.querySelector('.wrap--info__desc--post-info > span');
     const postStatus = modal.querySelector('.wrap--info__desc--post-status > span');
     const decription = modal.querySelector('.wrap--info__content > span');
+    const chapters = modal.querySelector('.wrap--info__list--chapter');
     // define const used for user
     const imageTemp = new Image();
     const loadingPath = { dest: 'assets/gifs/loading_01.gif', className: 'loading' };
@@ -138,6 +139,34 @@ export function addInfoToModal({ modal, address }) {
       templateRemoveAndAppendList({ parent: domNeedUpdate.element, dataList: infoManga[domNeedUpdate.field] });
     });
     decription.innerText = infoManga.desc;
+    if (chapters) {
+      chapters.remove();
+      const elementDiv = document.createElement('div');
+      elementDiv.classList.add('wrap--info__list--chapter');
+      elementDiv.innerHTML = `
+        <h3 class="title--list__general">
+          ch.
+          <span class="start">${1}</span>
+          -
+          <span class="end">${infoManga.chapters.length}</span>
+        </h3>
+        <div class="table--list__general">
+        </div>
+      `;
+      const tempAppend = elementDiv.querySelector('.table--list__general');
+      infoManga.chapters.forEach((chapter, index) => {
+        tempAppend.innerHTML += `
+          <div class="table--list__general--item">
+            <span class="table--list__general--item__name">${chapter.name}</span>
+            <span class="table--list__general--item__nummber-image">${chapter?.create?.date || 'none'} | ${
+          chapter?.create?.hour || 'none'
+        }</span>
+            <span class="table--list__general--item__time">${chapter.images.length}</span>
+          </div>
+        `;
+      });
+      modal.querySelector('.wrap--info').appendChild(elementDiv);
+    }
   }
 }
 

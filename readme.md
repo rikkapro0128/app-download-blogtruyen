@@ -6,6 +6,14 @@
 
 # UI Application ☆*: .｡. o(≧▽≦)o .｡.:*☆
 
+### Main options pick to clone
+
 <p align="center">
-   <img src="./app_images/screen_short.png" alt="[UI Application]"/>
+   <img width="500" src="./app_images/screen_short.png" style="margin-top: 20px;" alt="[UI Application]"/>
+</p>
+
+### View information manga you will be clone
+
+<p align="center">
+   <img width="500" src="./app_images/screen_short_02.png" style="margin: 20px;" alt="[UI Application]"/>
 </p>

@@ -679,6 +679,7 @@ a {
       color: $--color-peach;
       transition: color 150ms linear;
       cursor: pointer;
+      z-index: 999;
       span {
         font-size: 3rem;
         color: inherit;
@@ -689,6 +690,8 @@ a {
     }
     .wrap--info {
       padding: 2rem;
+      max-height: 100%;
+      overflow-y: scroll;
       &__thumbnail {
         min-width: 180px;
         width: 230px;
@@ -740,6 +743,7 @@ a {
             font-size: 1.1rem;
             display: inline-block;
             margin-right: 0.4rem;
+            box-shadow: 0 14px 30px rgba($--color-green, 0.1), 0 4px 4px rgba($--color-green, 0.04);
           }
           span {
             font-size: 1.3rem;
@@ -772,30 +776,77 @@ a {
           }
           * {
             color: $--color-white;
-            background: $--color-peach;
+            background: $--color-text;
             padding: 0.4rem 0.8rem;
             border-radius: 6px;
             margin-top: 2px;
             font-size: 1.1rem;
+            box-shadow: 0 14px 30px rgba($--color-text, 0.1), 0 4px 4px rgba($--color-text, 0.04);
           }
           span {
             font-style: italic;
+            transition: background 80ms ease-out;
+            cursor: pointer;
+            &:hover {
+              background: $--color-peach;
+              box-shadow: 0 14px 30px rgba($--color-peach, 0.1), 0 4px 4px rgba($--color-peach, 0.04);
+            }
           }
         }
       }
       &__content {
-        position: relative;
-        top: 1rem;
-        clear: both;
-        background: $--color-blue;
         padding: 1rem;
         border-radius: 4px;
         max-height: 400px;
         overflow-y: scroll;
-        box-shadow: 0 14px 30px rgba($--color-shadow-blue, 0.1), 0 4px 4px rgba($--color-shadow-blue, 0.04);
+        background: $--color-text;
+        box-shadow: 0 14px 30px rgba($--color-text, 0.1), 0 4px 4px rgba($--color-text, 0.04);
         span {
           color: $--color-white;
           font-size: 1.5rem;
+        }
+      }
+      &__list--chapter {
+        .title--list__general {
+          text-align: center;
+          text-transform: capitalize;
+          font-size: 1.4rem;
+          * {
+            font-size: inherit;
+          }
+        }
+        .table--list__general {
+          &--item {
+            font-size: 1.4rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            $gap: 0.6rem;
+            padding: 0.4rem 0;
+            &:first-child {
+              margin-top: $gap;
+            }
+            &:not(:last-child) {
+              margin-bottom: $gap;
+            }
+            span {
+              &:nth-child(1) {
+                text-align: left;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+              }
+              &:nth-child(2),
+              &:nth-child(3) {
+                text-align: right;
+              }
+              &:last-child {
+                text-transform: uppercase;
+              }
+            }
+            * {
+              font-size: inherit;
+            }
+          }
         }
       }
     }

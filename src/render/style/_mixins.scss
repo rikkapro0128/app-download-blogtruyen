@@ -93,3 +93,20 @@
     }
   }
 }
+
+.clear-fix {
+  clear: both;
+}
+
+.line--horizontal {
+  width: 100%;
+  position: relative;
+  padding: 1rem 0;
+  &::before {
+    content: '';
+    width: 100%;
+    position: absolute;
+    height: 1px;
+    background: $--color-text;
+  }
+}
